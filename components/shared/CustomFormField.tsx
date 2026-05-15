@@ -260,7 +260,7 @@ const CustomFormField = <T extends FieldValues>(
       <RenderInput field={field} props={props} />
 
       {error?.message && (
-        <FieldError className="shad-error">
+        <FieldError className="text-red-500">
           {String(error.message)}
         </FieldError>
       )}

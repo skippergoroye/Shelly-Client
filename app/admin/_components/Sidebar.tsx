@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Box, ShoppingCart, Users, BarChart2, Settings, Plus } from "lucide-react";
 import CompanyName from "@/components/common/company-name";
+import SubmitButton from "@/components/shared/SubmitButton";
 
 const NAV_LINKS = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -48,10 +49,10 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-4">
-        <button className="w-full h-10 bg-[#0A58CA] hover:bg-[#084298] text-white font-medium rounded-md flex items-center justify-center gap-2 transition-colors shadow-sm text-sm">
+        <SubmitButton type="button" className="w-full h-10 bg-[#0A58CA] hover:bg-[#084298] text-white font-medium rounded-md flex items-center justify-center gap-2 transition-colors shadow-sm text-sm">
           <Plus className="w-4 h-4" />
           New Product
-        </button>
+        </SubmitButton>
       </div>
     </aside>
   );

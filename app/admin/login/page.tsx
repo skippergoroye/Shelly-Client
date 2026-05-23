@@ -8,6 +8,7 @@ import * as z from "zod";
 import CustomFormField, { FormFieldType } from "@/components/shared/CustomFormField";
 import SubmitButton from "@/components/shared/SubmitButton";
 import CompanyName from "@/components/common/company-name";
+import { useRouter } from "next/navigation";
 
 const LoginSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -16,6 +17,7 @@ const LoginSchema = z.object({
 
 export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -32,6 +34,8 @@ export default function AdminLoginPage() {
     setTimeout(() => {
       setIsLoading(false);
       console.log("Form Submitted", data);
+       // Redirect to dashboard
+      router.push("/admin");
     }, 1500);
   };
 

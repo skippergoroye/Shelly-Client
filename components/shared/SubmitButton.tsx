@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { Loader } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 
 export interface SubmitButtonProps {
@@ -30,7 +31,7 @@ const SubmitButton = ({
     <Button
       type={type}
       disabled={isLoading || loading || disabled}
-      className={className ?? " text-white cursor-pointer"}
+      className={cn("cursor-pointer", className || "text-white")}
       onClick={clickFn}
     >
       {isLoading || loading ? (

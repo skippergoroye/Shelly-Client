@@ -2,6 +2,7 @@
 
 import { Search, Bell, HelpCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import SubmitButton from "@/components/shared/SubmitButton";
 
 
 export default function Navbar() {
@@ -19,12 +20,12 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-5">
-        <button className="text-gray-500 hover:text-gray-700">
+        <SubmitButton type="button" className="text-gray-500 hover:text-gray-700 bg-transparent hover:bg-transparent border-0 shadow-none p-0 h-auto">
           <Bell className="w-[20px] h-[20px]" />
-        </button>
-        <button className="text-gray-500 hover:text-gray-700">
+        </SubmitButton>
+        <SubmitButton type="button" className="text-gray-500 hover:text-gray-700 bg-transparent hover:bg-transparent border-0 shadow-none p-0 h-auto">
           <HelpCircle className="w-[20px] h-[20px]" />
-        </button>
+        </SubmitButton>
         
         <div className="w-px h-6 bg-gray-200 mx-1"></div>
 

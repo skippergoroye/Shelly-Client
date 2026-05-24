@@ -1,4 +1,7 @@
+"use client";
+
 import { Download, Plus } from "lucide-react";
+import Link from "next/link";
 import SubmitButton from "@/components/shared/SubmitButton";
 
 export function InventoryHeader() {
@@ -14,10 +17,12 @@ export function InventoryHeader() {
           <Download className="w-4 h-4" />
           Export CSV
         </SubmitButton>
-        <SubmitButton type="button" className="h-10 px-4 bg-[#0A58CA] hover:bg-[#084298] text-white font-medium rounded-md flex items-center gap-2 text-sm shadow-sm transition-colors">
-          <Plus className="w-4 h-4" />
-          Add Product
-        </SubmitButton>
+        <Link href="/admin/inventory/add">
+          <SubmitButton type="button" className="h-10 px-4 bg-[#0A58CA] hover:bg-[#084298] text-white font-medium rounded-md flex items-center gap-2 text-sm shadow-sm transition-colors">
+            <Plus className="w-4 h-4" />
+            Add Product
+          </SubmitButton>
+        </Link>
       </div>
     </div>
   );

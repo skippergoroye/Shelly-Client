@@ -33,7 +33,14 @@ const Products = () => {
   
   // if (isLoading) return <ScreenLoader open={isLoading} />;
   // if (isLoading) return <div>Loading products...</div>;
-  if (error) return <div>Error loading products</div>;
+  if (error){
+    //  console.log("products", error)
+    return <div>Error loading products</div>;
+
+  } 
+
+
+ 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />

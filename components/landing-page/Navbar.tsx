@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/app/store";
+import CompanyName from "../common/company-name";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,51 +21,13 @@ const Navbar = () => {
     <header className="bg-white border-b border-[color:var(--outline-variant)] shadow-sm sticky top-0 z-50">
       <div className="container-max px-6 md:px-12 h-20 flex justify-between items-center">
         <div className="flex items-center gap-20">
-          <Link
-            href="/"
-            className="text-2xl font-bold text-[color:var(--primary)]"
-          >
-            Shelly Mart
-          </Link>
+          <CompanyName />
 
-          <nav className="hidden md:flex items-center gap-6">
-            <a
-              href="products"
-              className="text-[color:var(--primary)] font-semibold text-body-md border-b-2 border-[color:var(--primary)] pb-1"
-            >
-              Shop All
-            </a>
-            <a
-              href="#"
-              className="text-[color:var(--on-surface-variant)] font-medium hover:text-[color:var(--primary-container)] transition-colors text-body-md"
-            >
-              New Arrivals
-            </a>
-            <a
-              href="#"
-              className="text-[color:var(--on-surface-variant)] font-medium hover:text-[color:var(--primary-container)] transition-colors text-body-md"
-            >
-              Best Sellers
-            </a>
-            <a
-              href="#"
-              className="text-[color:var(--on-surface-variant)] font-medium hover:text-[color:var(--primary-container)] transition-colors text-body-md"
-            >
-              Categories
-            </a>
-          </nav>
+        
         </div>
 
         <div className="flex items-center gap-6">
-          {/*        
-          <div className="hidden lg:flex items-center bg-[color:var(--surface-container-lowest)] border border-[color:var(--outline-variant)] rounded-lg px-3 py-2 w-64 focus-within:border-[color:var(--primary-container)] focus-within:ring-2 focus-within:ring-[color:var(--primary-container)]/20 transition-all">
-            <Search size={16} className="text-[color:var(--outline)]" />
-            <Input
-              type="text"
-              placeholder="Search products..."
-              className="bg-transparent border-none focus:ring-0 text-body-sm w-full outline-none px-2 h-auto p-0"
-            />
-          </div> */}
+        
 
           <div className="flex items-center gap-2">
             <Button

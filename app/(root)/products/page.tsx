@@ -42,18 +42,22 @@ const Products = () => {
 
  
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-[#faf8ff]">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
-        {/* <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">Shop All</h1>
-          <p className="text-gray-600 text-base">
-            Discover our curated selection of high-end essentials designed for modern life.
+        <div className="mb-12">
+          <h1 className="text-5xl font-bold text-gray-900 tracking-tight mb-4 font-sans">
+            The Bespoke Series
+          </h1>
+          <p className="text-gray-600 text-[17px] max-w-2xl leading-relaxed">
+            A curated selection of technical footwear, blending ancestral construction with
+            modern high-energy aesthetics. Each pair is finished by hand in our London
+            atelier.
           </p>
-        </div> */}
+        </div>
 
-        <div className="flex gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           <Sidebar onCategoryChange={setSelectedCategory} />
 
           <ProductGrid

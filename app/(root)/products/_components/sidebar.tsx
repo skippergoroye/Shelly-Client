@@ -1,160 +1,136 @@
 'use client'
 
-import { Checkbox } from '@/components/ui/checkbox'
-import { Slider } from '@/components/ui/slider'
 import { useState } from 'react'
-import type { CheckedState } from '@radix-ui/react-checkbox'
-
-const colors = [
-  { name: 'black', hex: '#000000' },
-  { name: 'white', hex: '#FFFFFF' },
-  { name: 'blue', hex: '#2563EB' },
-  { name: 'light gray', hex: '#D1D5DB' },
-  { name: 'brown', hex: '#92400E' },
-]
+import { Truck, ShieldCheck, RotateCcw, Award, Sparkles, Copy, Check } from 'lucide-react'
 
 interface SidebarProps {
   onCategoryChange?: (category: string | null) => void
 }
 
 export function Sidebar({ onCategoryChange }: SidebarProps) {
-  const [priceRange, setPriceRange] = useState([0, 1000])
-  const [selectedCategories, setSelectedCategories] = useState<string | null>(null)
-  const [selectedRating, setSelectedRating] = useState<number | null>(null)
-  const [inStockOnly, setInStockOnly] = useState(false)
+  const [copied, setCopied] = useState(false)
 
-  const handleCategoryChange = (category: string) => {
-    const newCategory = selectedCategories === category ? null : category
-    setSelectedCategories(newCategory)
-    onCategoryChange?.(newCategory)
-  }
-
-  const handleStockChange = (checked: CheckedState) => {
-    setInStockOnly(checked === true)
+  const handleCopy = () => {
+    navigator.clipboard.writeText('BESPOKE20')
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
-    <aside className="w-56 bg-white rounded-lg p-6">
-    
-      <div className="mb-8">
-        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-4">
-          Category
-        </h3>
+    <aside className="w-full lg:w-64 flex flex-col gap-6 h-fit">
+      {/* Promo Banner Card */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-800 text-white p-6 border border-blue-800 shadow-md">
+        {/* Decorative background blurs */}
+        <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
+        <div className="absolute -left-10 -top-10 w-24 h-24 bg-blue-500/30 rounded-full blur-lg pointer-events-none" />
 
-        <div className="space-y-3">
-          {['fragrances', 'beauty', 'furniture', 'groceries', 'Tech Gear'].map(
-            (category) => (
-              <label
-                key={category}
-                className="flex items-center space-x-3 cursor-pointer"
-              >
-                <Checkbox
-                  checked={selectedCategories === category}
-                  onCheckedChange={() => handleCategoryChange(category)}
-                  className="rounded-sm"
-                />
+        <div className="relative z-10 flex flex-col gap-4">
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-bold tracking-widest uppercase w-fit">
+            <Sparkles className="w-3 h-3 text-yellow-300" />
+            Limited Offer
+          </div>
 
-                <span className="text-gray-700 text-sm">{category}</span>
-              </label>
-            )
-          )}
-        </div>
-      </div>
+          <div>
+            <h3 className="text-xl font-bold font-serif leading-tight">
+              The Bespoke Series Sale
+            </h3>
+            <p className="text-xs text-blue-100 mt-2 leading-relaxed">
+              Use this exclusive code at checkout to claim your 20% discount on all hand-finished editions.
+            </p>
+          </div>
 
-   
-      <div className="mb-8">
-        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-4">
-          Price Range
-        </h3>
-
-        <Slider
-          value={priceRange}
-          onValueChange={setPriceRange}
-          min={0}
-          max={1000}
-          step={50}
-          className="mb-3"
-        />
-
-        <div className="flex justify-between text-xs text-gray-600">
-          <span>NGN{priceRange[0]}</span>
-          <span>NGN{priceRange[1]}+</span>
-        </div>
-      </div>
-
-    
-      <div className="mb-8">
-        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-4">
-          Color
-        </h3>
-
-        <div className="flex flex-wrap gap-3">
-          {colors.map((color) => (
+          {/* Code box */}
+          <div className="flex items-center justify-between bg-black/20 border border-white/20 p-2.5 mt-1 backdrop-blur-sm">
+            <code className="text-sm font-mono font-bold tracking-wider text-yellow-300">
+              BESPOKE20
+            </code>
             <button
-              key={color.name}
-              className="w-8 h-8 rounded-full border-2 border-gray-300 hover:border-gray-500 transition-all cursor-pointer"
-              style={{ backgroundColor: color.hex }}
-              title={color.name}
-              aria-label={color.name}
-            />
-          ))}
-        </div>
-      </div>
-
-    
-      <div className="mb-8">
-        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-4">
-          Rating
-        </h3>
-
-        <div className="space-y-2">
-          {[5, 4, 3, 2, 1].map((rating) => (
-            <label
-              key={rating}
-              className="flex items-center space-x-3 cursor-pointer"
+              onClick={handleCopy}
+              className="text-xs flex items-center gap-1 font-semibold text-white hover:text-yellow-300 transition-colors cursor-pointer"
             >
-              <Checkbox
-                checked={selectedRating === rating}
-                onCheckedChange={() =>
-                  setSelectedRating(
-                    selectedRating === rating ? null : rating
-                  )
-                }
-                className="rounded-sm"
-              />
-
-              <div className="flex items-center space-x-1">
-                {Array.from({ length: rating }).map((_, i) => (
-                  <span key={i} className="text-yellow-500">
-                    ★
-                  </span>
-                ))}
-
-                <span className="text-gray-600 text-sm ml-1">
-                  {rating} up
-                </span>
-              </div>
-            </label>
-          ))}
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-green-300 animate-bounce" />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  Copy
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
-      <div>
-        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-4">
-          Availability
+      {/* Trust Badges Card */}
+      <div className="bg-white p-6 border border-gray-300 flex flex-col gap-6">
+        <h3 className="text-xs font-bold text-gray-500 tracking-widest uppercase pb-2 border-b border-gray-100">
+          Our Guarantees
         </h3>
 
-        <label className="flex items-center space-x-3 cursor-pointer">
-          <Checkbox
-            checked={inStockOnly}
-            onCheckedChange={handleStockChange}
-            className="rounded-sm"
-          />
+        <div className="flex flex-col gap-5">
+          {/* Trust Badge 1 */}
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded">
+              <Truck className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 leading-none mb-1">
+                Complimentary Shipping
+              </h4>
+              <p className="text-xs text-gray-600 leading-relaxed mt-1">
+                Enjoy free worldwide shipping and tracking on every order.
+              </p>
+            </div>
+          </div>
 
-          <span className="text-gray-700 text-sm">
-            In Stock Only
-          </span>
-        </label>
+          {/* Trust Badge 2 */}
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 leading-none mb-1">
+                Secure SSL Checkout
+              </h4>
+              <p className="text-xs text-gray-600 leading-relaxed mt-1">
+                All transactions are fully encrypted and protected.
+              </p>
+            </div>
+          </div>
+
+          {/* Trust Badge 3 */}
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded">
+              <RotateCcw className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 leading-none mb-1">
+                30-Day Exchanges
+              </h4>
+              <p className="text-xs text-gray-600 leading-relaxed mt-1">
+                Hassle-free sizing exchanges or returns within 30 days.
+              </p>
+            </div>
+          </div>
+
+          {/* Trust Badge 4 */}
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded">
+              <Award className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 leading-none mb-1">
+                London Atelier Finish
+              </h4>
+              <p className="text-xs text-gray-600 leading-relaxed mt-1">
+                Crafted to perfection using ancestral methods.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </aside>
   )

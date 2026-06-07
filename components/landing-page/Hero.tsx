@@ -42,7 +42,7 @@ const Hero = () => {
 
           <div className="flex flex-wrap gap-4 pt-2">
             <Link href="/products">
-              <Button className="cursor-pointer bg-[color:var(--primary-container)] text-[color:var(--on-primary)] hover:bg-[color:var(--primary)] h-12 px-8 gap-2 shadow-lg shadow-[color:var(--primary-container)]/20 font-semibold rounded-md">
+              <Button className="cursor-pointer bg-[color:var(--primary)] text-[color:var(--on-primary)] hover:bg-[color:var(--primary)] h-12 px-8 gap-2 shadow-lg shadow-[color:var(--primary-container)]/20 font-semibold rounded-md">
                 Shop Now
                 <ArrowRight size={20} />
               </Button>

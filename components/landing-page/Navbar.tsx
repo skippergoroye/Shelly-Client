@@ -7,8 +7,13 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/app/store";
 import CompanyName from "../common/company-name";
+import { cn } from "@/lib/utils";
 
-const Navbar = () => {
+interface NavbarProps {
+  variant?: string;
+}
+
+const Navbar = ({ variant }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [cartCount, setCartCount] = useState(0);
@@ -18,13 +23,12 @@ const Navbar = () => {
     setCartCount(count);
   }, [count]);
   return (
-    <header className="bg-white border-b border-[color:var(--outline-variant)] shadow-sm sticky top-0 z-50">
+    <header className={cn("bg-white border-b border-[color:var(--outline-variant)] shadow-sm sticky top-0 z-50", variant)}>
       <div className="container-max px-6 md:px-12 h-20 flex justify-between items-center">
-        <div className="flex items-center gap-20">
+       
           <CompanyName />
 
-        
-        </div>
+
 
         <div className="flex items-center gap-6">
         

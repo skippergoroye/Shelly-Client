@@ -3,16 +3,17 @@ import FeaturesSection from "@/components/landing-page/features-section";
 import Footer from "@/components/landing-page/Footer";
 import Hero from "@/components/landing-page/Hero";
 import Navbar from "@/components/landing-page/Navbar";
-import TrendingSection from "@/components/landing-page/trending-section";
+import { TestimonialMarquee } from "@/components/landing-page/testimonial-marquee";
+
 
 
 export default function Home() {
   return (
     <main>
-      <Navbar />
+      <TestimonialMarquee />
+      <Navbar variant="top-14" />
       <Hero />
       <CategorySection />
-      <TrendingSection />
       <FeaturesSection />
       <Footer />
     </main>

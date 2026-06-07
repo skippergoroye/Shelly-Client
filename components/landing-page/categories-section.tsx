@@ -1,51 +1,137 @@
+'use client'
 
-'use client';
+import { useState } from 'react'
+import Image, { StaticImageData } from 'next/image'
 
-import { categories } from '@/constants';
-import { ExternalLink } from 'lucide-react';
-import { CategoryCard } from './_components/category-card';
+import ImgOne from '../../public/img/shoe-one.png'
+import ImgTwo from '../../public/img/shoe-two.png'
+import ImgThree from '../../public/img/shoe-three.png'
+import ImgFour from '../../public/img/shoe-four.png'
 
-
-
-const CategorySection = () => {
-  return (
-     <section className="container-max px-6 md:px-12 py-20">
-      {/* Section Header */}
-      <div className="flex justify-between items-end mb-12">
-        <div>
-          <h2 className="text-h2 text-[color:var(--foreground)]">Curated Categories</h2>
-          <p className="text-body-md text-[color:var(--on-surface-variant)]">Explore our diverse ranges of premium goods</p>
-        </div>
-        <a href="#" className="text-[color:var(--primary)] text-label-md flex items-center gap-2 hover:underline">
-          View All Categories <ExternalLink size={18} />
-        </a>
-      </div>
-
-      {/* Categories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-6 h-[600px]">
-        {/* Large Featured Category */}
-        <CategoryCard
-          title={categories[0].title}
-          description={categories[0].description}
-          badge={categories[0].badge}
-          image={categories[0].image}
-          className="md:col-span-2 md:row-span-2"
-        />
-
-        {/* Second Large Category */}
-        <CategoryCard
-          title={categories[1].title}
-          description={categories[1].description}
-          image={categories[1].image}
-          className="md:col-span-2 md:row-span-1"
-        />
-
-        {/* Small Categories */}
-        <CategoryCard title={categories[2].title} image={categories[2].image} />
-        <CategoryCard title={categories[3].title} image={categories[3].image} />
-      </div>
-    </section>
-  )
+interface Product {
+  id: string
+  brand: string
+  name: string
+  price: number
+  image: StaticImageData
 }
 
-export default CategorySection
+const products: Product[] = [
+  {
+    id: '1',
+    brand: 'OXFORD',
+    name: 'The Cobalt Archer',
+    price: 1250,
+    image: ImgOne,
+  },
+  {
+    id: '2',
+    brand: 'CHELSEA',
+    name: 'Midnight Stealth',
+    price: 1400,
+    image: ImgTwo,
+  },
+  {
+    id: '3',
+    brand: 'SNEAKER',
+    name: 'Aero-Kinetic Low',
+    price: 890,
+    image: ImgThree,
+  },
+  {
+    id: '4',
+    brand: 'BROGUE',
+    name: 'Heritage Wingtip',
+    price: 1150,
+    image: ImgFour,
+  },
+]
+
+export default function CategorySection() {
+  const [addedToCart, setAddedToCart] = useState<string | null>(null)
+
+  const handleAddToCart = (productId: string) => {
+    setAddedToCart(productId)
+
+    setTimeout(() => {
+      setAddedToCart(null)
+    }, 2000)
+  }
+
+  return (
+    <div className="w-full bg-white px-6 py-12">
+    <section className="container-max px-6 md:px-12  w-full bg-white px-6 py-12">
+      <div className="mx-auto max-w-7xl bg-white">
+        {/* Header */}
+        <div className="mb-10 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold tracking-widest text-gray-600">
+              CURATED EDITIONS
+            </p>
+            <h1 className="mt-2 text-4xl font-bold text-[color:var(--primary)]">
+              The Seasonal Collection
+            </h1>
+          </div>
+
+          <a
+            href="#"
+            className="text-sm font-semibold text-[color:var(--primary)] underline"
+          >
+            View All
+          </a>
+        </div>
+
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="overflow-hidden border border-gray-300 bg-white"
+            >
+              {/* Product Image */}
+              <div className="aspect-square overflow-hidden bg-white">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  className="h-full w-full object-cover p-2"
+                  width={500}
+                  height={500}
+                  priority={product.id === '1'}
+                />
+              </div>
+
+              {/* Product Info */}
+              <div className="flex flex-col p-5">
+                <p className="text-xs font-bold tracking-wider text-gray-600">
+                  {product.brand}
+                </p>
+
+                <h3 className="mt-3 text-lg font-bold text-black">
+                  {product.name}
+                </h3>
+
+                <p className="mt-2 text-sm font-semibold text-blue-600">
+                  ${product.price}
+                </p>
+
+                <button
+                  onClick={() => handleAddToCart(product.id)}
+                  className={`mt-4 w-full rounded px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 ${
+                    addedToCart === product.id
+                      ? 'bg-green-500'
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
+                >
+                  {addedToCart === product.id
+                    ? 'Added to Cart'
+                    : 'Add to Cart'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    </div>
+  )
+}

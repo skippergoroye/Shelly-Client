@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +20,6 @@ import { cn, parseNameAndSize } from "@/lib/utils";
 import CustomFormField, { FormFieldType } from "@/components/shared/CustomFormField";
 import SubmitButton from "@/components/shared/SubmitButton";
 import ToastNotification from "@/components/shared/ToastNotification";
-import ReceiptModal from "../../cart/_components/receipt-modal";
 
 const CheckoutSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -46,16 +43,6 @@ export default function CheckoutForm() {
   );
 
   const [isPaying, setIsPaying] = useState(false);
-  const [receiptOpen, setReceiptOpen] = useState(false);
-  const [receiptData, setReceiptData] = useState<{
-    items: any[];
-    subtotal: number;
-    shipping: number;
-    tax: number;
-    total: number;
-    orderNumber: string;
-    orderDate: string;
-  } | null>(null);
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(CheckoutSchema),
@@ -88,24 +75,31 @@ export default function CheckoutForm() {
 
   const handlePaymentSuccess = (reference: any, values: CheckoutFormValues) => {
     const orderNumber = reference?.reference || `ORD-${Date.now()}`;
-    setReceiptData({
+    // Estimate delivery 7 days from now
+    const estDate = new Date();
+    estDate.setDate(estDate.getDate() + 7);
+    const estimatedDelivery = estDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+
+    const orderData = {
+      orderNumber,
+      orderDate: new Date().toLocaleDateString(),
+      estimatedDelivery,
       items: cartItems.map((item) => ({ ...item })),
       subtotal,
       shipping: shippingCost,
       tax,
       total,
-      orderNumber,
-      orderDate: new Date().toLocaleDateString(),
-    });
-    setReceiptOpen(true);
+    };
+
+    localStorage.setItem("shelly_last_order", JSON.stringify(orderData));
     dispatch(clearCart());
+    router.push("/checkout/success");
   };
 
-  const handleCloseReceipt = () => {
-    setReceiptOpen(false);
-    setReceiptData(null);
-    router.push("/products");
-  };
 
   const onSubmit = (values: CheckoutFormValues) => {
     if (total <= 0) {
@@ -144,7 +138,7 @@ export default function CheckoutForm() {
     });
   };
 
-  if (cartItems.length === 0 && !receiptOpen) {
+  if (cartItems.length === 0) {
     return (
       <div className="container-max px-6 py-24 text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Your Cart is Empty</h1>
@@ -361,17 +355,7 @@ export default function CheckoutForm() {
         </form>
       </Form>
 
-      <ReceiptModal
-        isOpen={receiptOpen}
-        onClose={handleCloseReceipt}
-        orderNumber={receiptData?.orderNumber ?? "-"}
-        orderDate={receiptData?.orderDate ?? "-"}
-        items={receiptData?.items ?? []}
-        subtotal={receiptData?.subtotal ?? 0}
-        shipping={receiptData?.shipping ?? 0}
-        tax={receiptData?.tax ?? 0}
-        total={receiptData?.total ?? 0}
-      />
+    
     </div>
   );
 }

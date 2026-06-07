@@ -43,6 +43,7 @@ export default function CheckoutForm() {
   );
 
   const [isPaying, setIsPaying] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(CheckoutSchema),
@@ -96,6 +97,7 @@ export default function CheckoutForm() {
     };
 
     localStorage.setItem("shelly_last_order", JSON.stringify(orderData));
+    setIsRedirecting(true);
     dispatch(clearCart());
     router.push("/checkout/success");
   };
@@ -138,7 +140,7 @@ export default function CheckoutForm() {
     });
   };
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !isRedirecting) {
     return (
       <div className="container-max px-6 py-24 text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Your Cart is Empty</h1>

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { ShieldCheckIcon, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import SubmitButton from "@/components/shared/SubmitButton";
 
 interface OrderSummaryProps {
   totalPrice?: number;
@@ -66,22 +65,20 @@ export default function OrderSummary({
 
       {/* Checkout Button */}
       {total > 0 ? (
-        <Link href="/checkout" className="block w-full mb-4">
-          <SubmitButton
-            type="button"
-            className="w-full bg-[color:var(--primary)] hover:bg-blue-700 text-white font-bold py-5.5 rounded cursor-pointer"
-          >
-            Proceed to Checkout →
-          </SubmitButton>
-        </Link>
-      ) : (
-        <SubmitButton
-          type="button"
-          disabled
-          className="w-full bg-gray-300 text-white font-bold py-3 rounded mb-4 cursor-not-allowed"
+        <Link
+          href="/checkout"
+          className="block w-full mb-4 bg-[color:var(--primary)] hover:bg-blue-700 text-white font-bold py-3.5 rounded text-center transition-colors cursor-pointer"
         >
           Proceed to Checkout →
-        </SubmitButton>
+        </Link>
+      ) : (
+        <button
+          type="button"
+          disabled
+          className="w-full bg-gray-300 text-white font-bold py-3.5 rounded mb-4 cursor-not-allowed"
+        >
+          Proceed to Checkout →
+        </button>
       )}
 
       {/* Security Message */}

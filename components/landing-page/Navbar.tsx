@@ -73,49 +73,9 @@ const Navbar = ({ variant }: NavbarProps) => {
             </Button>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden hover:bg-[color:var(--surface-container)]"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <Menu
-              size={20}
-              className="text-[color:var(--on-surface-variant)]"
-            />
-          </Button>
+        
         </div>
       </div>
-
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <nav className="md:hidden border-t border-[color:var(--outline-variant)] px-6 py-4 space-y-3">
-          <a
-            href="#"
-            className="block text-[color:var(--primary)] font-semibold text-body-md"
-          >
-            Shop All
-          </a>
-          <a
-            href="#"
-            className="block text-[color:var(--on-surface-variant)] hover:text-[color:var(--primary)] transition-colors text-body-md"
-          >
-            New Arrivals
-          </a>
-          <a
-            href="#"
-            className="block text-[color:var(--on-surface-variant)] hover:text-[color:var(--primary)] transition-colors text-body-md"
-          >
-            Best Sellers
-          </a>
-          <a
-            href="#"
-            className="block text-[color:var(--on-surface-variant)] hover:text-[color:var(--primary)] transition-colors text-body-md"
-          >
-            Categories
-          </a>
-        </nav>
-      )}
     </header>
   );
 };

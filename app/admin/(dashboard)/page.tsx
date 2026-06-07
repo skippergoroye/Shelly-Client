@@ -1,28 +1,28 @@
-import { DashboardHeader } from "../_components/DashboardHeader";
-import { KpiCards } from "../_components/KpiCards";
-import { RevenueTrends } from "../_components/RevenueTrends";
-import { TopCategories } from "../_components/TopCategories";
-import { RecentTransactions } from "../_components/RecentTransactions";
+import { DashboardHeader } from "./_components/DashboardHeader";
+import { KpiCards } from "./_components/KpiCards";
+import { RevenueTrends } from "./_components/RevenueTrends";
+import { ArtisansInsight } from "./_components/ArtisansInsight";
+import { RecentTransactions } from "./_components/RecentTransactions";
 
 export default function AdminDashboard() {
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
-      {/* Header */}
+    <div className="space-y-8 max-w-7xl mx-auto pb-12">
+   
       <DashboardHeader />
 
-      {/* KPI Cards */}
+   
       <KpiCards />
 
-      {/* Charts Row */}
+   
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Revenue Trends */}
+        
         <RevenueTrends />
 
-        {/* Top Categories */}
-        <TopCategories />
+     
+        <ArtisansInsight />
       </div>
 
-      {/* Recent Transactions */}
+    
       <RecentTransactions />
     </div>
   );

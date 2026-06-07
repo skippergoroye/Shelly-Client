@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Minus, Plus, BookmarkIcon, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { parseNameAndSize } from '@/lib/utils';
 
 interface CartItemsProps {
   id: string;
@@ -16,14 +17,7 @@ interface CartItemsProps {
   onRemove?: () => void;
 }
 
-/** Extracts the EU size from a name like "Air Max (EU 42)" → { baseName: "Air Max", size: "EU 42" } */
-function parseNameAndSize(title: string): { baseName: string; size: string | null } {
-  const match = title.match(/^(.+?)\s*\(EU\s*(\d+)\)$/);
-  if (match) {
-    return { baseName: match[1].trim(), size: `EU ${match[2]}` };
-  }
-  return { baseName: title, size: null };
-}
+
 
 export default function CartItems({
   id,
@@ -49,7 +43,7 @@ export default function CartItems({
   return (
     <div className="border border-gray-200 rounded-lg p-4 bg-white">
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-        {/* Product Image */}
+        
         <div className="flex-shrink-0">
           <Image
             src={image}

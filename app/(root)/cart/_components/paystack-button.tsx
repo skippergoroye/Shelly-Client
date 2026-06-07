@@ -26,7 +26,7 @@ export default function PaystackCheckoutButton({ email, amount, disabled, onSucc
     return (
       <button
         disabled
-        className="w-full bg-gray-400 text-white font-bold py-3 rounded-lg mb-4 cursor-not-allowed"
+        className="w-full bg-gray-400 text-white font-bold py-5.5 rounded-lg mb-4 cursor-not-allowed"
       >
         Proceed to Checkout →
       </button>

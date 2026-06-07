@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import SpecialOffer from "./_components/special-offer";
 import OrderSummary from "./_components/order-summary";
 import ReceiptModal from "./_components/receipt-modal";
-import SavedForLater from "./_components/saved-for-later";
 import Footer from "@/components/landing-page/Footer";
 import Navbar from "@/components/landing-page/Navbar";
 import { useDispatch, useSelector } from "react-redux";

@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import SubmitButton from '@/components/shared/SubmitButton'
+import { useDispatch } from 'react-redux'
+import { addToCart } from '@/redux/features/cart/cartSlice'
+import ToastNotification from '@/components/shared/ToastNotification'
 
 import ImgOne from '../../public/img/shoe-one.png'
 import ImgTwo from '../../public/img/shoe-two.png'
@@ -49,6 +52,7 @@ const products: Product[] = [
 ]
 
 export default function CategorySection() {
+  const dispatch = useDispatch()
   const [addedToCart, setAddedToCart] = useState<string | null>(null)
   const [selectedSizes, setSelectedSizes] = useState<Record<string, number>>(
     Object.fromEntries(products.map((p) => [p.id, 40]))
@@ -58,12 +62,29 @@ export default function CategorySection() {
     setSelectedSizes((prev) => ({ ...prev, [productId]: size }))
   }
 
-  const handleAddToCart = (productId: string) => {
-    setAddedToCart(productId)
+  const handleAddToCart = (product: Product) => {
+    const size = selectedSizes[product.id]
 
-    setTimeout(() => {
-      setAddedToCart(null)
-    }, 2000)
+    dispatch(
+      addToCart({
+        id: `home-${product.id}-${size}`,
+        name: `${product.name} (EU ${size})`,
+        price: product.price,
+        quantity: 1,
+        images: '',
+        category: product.brand,
+        rating: 0,
+      })
+    )
+
+    ToastNotification({
+      title: `${product.name} (EU ${size}) added!`,
+      description: 'Item has been added to your cart.',
+      type: 'success',
+    })
+
+    setAddedToCart(product.id)
+    setTimeout(() => setAddedToCart(null), 2000)
   }
 
   return (
@@ -147,7 +168,7 @@ export default function CategorySection() {
 
                 <SubmitButton
                   type="button"
-                  clickFn={() => handleAddToCart(product.id)}
+                  clickFn={() => handleAddToCart(product)}
                   className="mt-4 w-full px-4 py-5.5 bg-[color:var(--primary)] text-sm font-semibold text-white transition-colors duration-200"
                 >
                   {addedToCart === product.id

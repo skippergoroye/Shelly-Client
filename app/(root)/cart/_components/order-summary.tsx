@@ -2,21 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { ShieldCheckIcon, ExternalLink } from "lucide-react";
-import dynamic from "next/dynamic";
-import { clearCart } from "@/redux/features/cart/cartSlice";
-import { useAppDispatch } from "@/redux/app/hooks";
-
-const PaystackCheckoutButton = dynamic(() => import("./paystack-button"), {
-  ssr: false,
-  loading: () => (
-    <button
-      disabled
-      className="w-full bg-gray-300 text-white font-bold py-3 rounded-lg mb-4"
-    >
-      Loading...
-    </button>
-  ),
-});
+import Link from "next/link";
+import SubmitButton from "@/components/shared/SubmitButton";
 
 interface OrderSummaryProps {
   totalPrice?: number;
@@ -29,8 +16,6 @@ export default function OrderSummary({
   email = "",
   onPaymentSuccess,
 }: OrderSummaryProps) {
-  const dispatch = useAppDispatch();
-
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -42,18 +27,6 @@ export default function OrderSummary({
   const taxRate = 0.08;
   const tax = subtotal * taxRate;
   const total = subtotal + shippingCost + tax;
-
-  const onSuccess = (reference: any) => {
-    if (onPaymentSuccess) {
-      onPaymentSuccess(reference);
-    } else {
-      dispatch(clearCart());
-    }
-  };
-
-  const onClose = () => {
-    // payment closed
-  };
 
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-xl px-6 sticky top-8">
@@ -91,14 +64,25 @@ export default function OrderSummary({
         </span>
       </div>
 
-      {/* Paystack Button */}
-      <PaystackCheckoutButton
-        email={email}
-        amount={Math.round(total * 100)}
-        disabled={total <= 0}
-        onSuccess={onSuccess}
-        onClose={onClose}
-      />
+      {/* Checkout Button */}
+      {total > 0 ? (
+        <Link href="/checkout" className="block w-full mb-4">
+          <SubmitButton
+            type="button"
+            className="w-full bg-[color:var(--primary)] hover:bg-blue-700 text-white font-bold py-5.5 rounded cursor-pointer"
+          >
+            Proceed to Checkout →
+          </SubmitButton>
+        </Link>
+      ) : (
+        <SubmitButton
+          type="button"
+          disabled
+          className="w-full bg-gray-300 text-white font-bold py-3 rounded mb-4 cursor-not-allowed"
+        >
+          Proceed to Checkout →
+        </SubmitButton>
+      )}
 
       {/* Security Message */}
       <div className="flex items-center gap-2 text-gray-600 text-sm mb-6 p-3 bg-white rounded-lg border border-gray-200">

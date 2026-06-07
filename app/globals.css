@@ -134,3 +134,44 @@
   50%  { width: 60%;  margin-left: 20%; }
   100% { width: 0%;   margin-left: 100%; }
 }
+
+/* ── react-phone-number-input overrides ───────────────────── */
+.phone-input-wrapper .PhoneInput {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Country flag + select container */
+.phone-input-wrapper .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  background-color: #F7FCFF;
+  border-right: 1px solid #e5e7eb;
+  padding: 0 10px;
+  min-width: 64px;
+  gap: 4px;
+}
+
+/* Native <select> inside the country picker */
+.phone-input-wrapper .PhoneInputCountrySelect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.phone-input-wrapper .PhoneInputCountryIcon {
+  width: 22px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.phone-input-wrapper .PhoneInputCountrySelectArrow {
+  color: #6b7280;
+  font-size: 10px;
+}

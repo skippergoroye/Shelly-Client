@@ -120,30 +120,22 @@ const RenderInput = <T extends FieldValues>({
 
     case FormFieldType.PHONE_INPUT:
       return (
-        <div className="flex w-full items-center gap-3">
-          <div className="flex items-center">
-            <PhoneInput
-              international
-              withCountryCallingCode
-              value={field.value as E164Number | undefined}
-              onChange={field.onChange}
-              className="w-14 h-11 rounded-[5px] px-3 text-16 placeholder:text-16 border bg-[#F7FCFF] border-bankGradient text-gray-900 placeholder:text-gray-500"
-            />
-          </div>
-
-          <input
-            type="tel"
-            value={field.value}
-            onChange={(e) => {
-              const onlyValidChars = e.target.value.replace(
-                /[^+\d]/g,
-                ""
-              );
-
-              field.onChange(onlyValidChars);
+        <div className="phone-input-wrapper flex items-center rounded-md border-1 border-[color:var(--primary)] bg-dark-400 overflow-hidden">
+          <PhoneInput
+            international
+            defaultCountry="NG"
+            value={field.value as E164Number | undefined}
+            onChange={field.onChange}
+            className="flex w-full items-stretch"
+            countrySelectProps={{
+              className:
+                "h-11 bg-[#F7FCFF] px-2 text-sm text-gray-900 focus:outline-none focus:ring-blue-300 cursor-pointer",
             }}
-            placeholder={props.placeholder}
-            className="w-full h-11 rounded-[5px] px-3 text-16 placeholder:text-16 border bg-[#F7FCFF] border-bankGradient text-gray-900 placeholder:text-gray-500"
+            numberInputProps={{
+              placeholder: props.placeholder,
+              className:
+                "flex h-11 w-full rounded-none border-0 bg-[#F7FCFF] px-3 py-2 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-900",
+            }}
           />
         </div>
       );

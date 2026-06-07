@@ -244,22 +244,18 @@ export default function CheckoutForm() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <CustomFormField
-                      fieldType={FormFieldType.INPUT}
+                      fieldType={FormFieldType.PHONE_INPUT}
                       control={form.control}
                       name="phone"
                       label="WhatsApp Number"
                       placeholder="+234 800 000 0000"
-                      type="tel"
-                      variant="h-11 shadow-sm w-full"
                     />
                     <CustomFormField
-                      fieldType={FormFieldType.INPUT}
+                      fieldType={FormFieldType.PHONE_INPUT}
                       control={form.control}
                       name="mobile"
                       label="Mobile Number"
                       placeholder="+234 800 000 0001"
-                      type="tel"
-                      variant="h-11 shadow-sm w-full"
                     />
                   </div>
                 </div>

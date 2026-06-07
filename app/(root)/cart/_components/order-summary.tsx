@@ -64,21 +64,25 @@ export default function OrderSummary({
       </div>
 
       {/* Checkout Button */}
-      {total > 0 ? (
+      {!mounted || total <= 0 ? (
+        <button
+          type="button"
+          disabled={!mounted || total <= 0}
+          className={`w-full font-bold py-3.5 rounded mb-4 transition-colors ${
+            !mounted || total <= 0
+              ? "bg-gray-300 text-white cursor-not-allowed"
+              : "bg-[color:var(--primary)] hover:bg-blue-700 text-white cursor-pointer"
+          }`}
+        >
+          Proceed to Checkout →
+        </button>
+      ) : (
         <Link
           href="/checkout"
           className="block w-full mb-4 bg-[color:var(--primary)] hover:bg-blue-700 text-white font-bold py-3.5 rounded text-center transition-colors cursor-pointer"
         >
           Proceed to Checkout →
         </Link>
-      ) : (
-        <button
-          type="button"
-          disabled
-          className="w-full bg-gray-300 text-white font-bold py-3.5 rounded mb-4 cursor-not-allowed"
-        >
-          Proceed to Checkout →
-        </button>
       )}
 
       {/* Security Message */}

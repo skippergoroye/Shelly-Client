@@ -266,7 +266,7 @@ export default function CheckoutForm() {
             {/* Right Column - Order Summary */}
             <div className="lg:col-span-2">
               <div className="bg-[color:var(--primary)] text-white border-0 rounded p-6 sticky top-8 space-y-6 shadow-md">
-                <h2 className="text-lg font-bold border-b border-blue-500/40 pb-4 text-white">Order Summary</h2>
+                <h2 className="text-lg font-bold border-b border-white/40 pb-4 text-white">Order Summary</h2>
 
                 {/* Cart Items list */}
                 <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1">
@@ -296,7 +296,7 @@ export default function CheckoutForm() {
                   })}
                 </div>
 
-                <hr className="border-blue-500/40" />
+                <hr className="border-white/40" />
 
                 {/* Subtotal / Shipping / Tax breakdown */}
                 <div className="space-y-3 text-sm">
@@ -322,7 +322,7 @@ export default function CheckoutForm() {
                   </div>
                 </div>
 
-                <hr className="border-blue-500/40" />
+                           <hr className="border-white/40" />
 
                 {/* Total */}
                 <div className="flex justify-between items-center text-xl font-bold text-white">

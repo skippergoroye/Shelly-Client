@@ -28,6 +28,9 @@ const socialLinks = [
 ];
 
 
+const currentYear = new Date().getFullYear();
+
+
 const Footer = () => {
     const [email, setEmail] = useState('');
 
@@ -44,7 +47,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
         
           <div className="flex flex-col gap-4">
-            <h2 className="text-h3 font-bold text-white">Shelly Mart</h2>
+            <h2 className="text-h3 font-bold text-white">Shelly Collections</h2>
             <p className="text-body-sm text-white max-w-sm">
               Redefining the standard of online retail through curated quality and frictionless experiences. Designed for those who appreciate the finer things.
             </p>
@@ -133,7 +136,7 @@ const Footer = () => {
 
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-body-sm text-white">
-          <p>&copy; 2026 Shelly Mart. All rights reserved.</p>
+          <p>&copy; {currentYear} Shelly Collections All rights reserved.</p>
 
           
           <div className="flex gap-6">

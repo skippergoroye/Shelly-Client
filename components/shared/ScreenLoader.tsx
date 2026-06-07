@@ -24,7 +24,7 @@ const ScreenLoader: React.FC<ScreenLoaderProps> = ({
           <Spinner />
         ) : (
           <h1 className="text-3xl font-bold animate-pulse">
-            Shelly Mart
+            Shelly Collections
           </h1>
 
           // If using logo instead:

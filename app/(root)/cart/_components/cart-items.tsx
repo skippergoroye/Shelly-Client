@@ -16,6 +16,15 @@ interface CartItemsProps {
   onRemove?: () => void;
 }
 
+/** Extracts the EU size from a name like "Air Max (EU 42)" → { baseName: "Air Max", size: "EU 42" } */
+function parseNameAndSize(title: string): { baseName: string; size: string | null } {
+  const match = title.match(/^(.+?)\s*\(EU\s*(\d+)\)$/);
+  if (match) {
+    return { baseName: match[1].trim(), size: `EU ${match[2]}` };
+  }
+  return { baseName: title, size: null };
+}
+
 export default function CartItems({
   id,
   image,
@@ -28,6 +37,7 @@ export default function CartItems({
   onRemove,
 }: CartItemsProps) {
   const [quantity, setQuantity] = useState(initialQuantity);
+  const { baseName, size } = parseNameAndSize(title);
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity > 0) {
@@ -43,7 +53,7 @@ export default function CartItems({
         <div className="flex-shrink-0">
           <Image
             src={image}
-            alt={title}
+            alt={baseName}
             width={120}
             height={120}
             className="rounded-lg object-cover w-full sm:w-[120px] h-[220px] sm:h-[120px]"
@@ -56,15 +66,25 @@ export default function CartItems({
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
             <div>
               <h3 className="text-base md:text-lg font-semibold text-black">
-                {title}
+                {baseName}
               </h3>
 
-              <p className="text-gray-600 text-sm">
-                {description}
-              </p>
+              <p className="text-gray-600 text-sm">{description}</p>
+
+              {/* Size Badge */}
+              {size && (
+                <div className="mt-2 flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                    Size:
+                  </span>
+                  <span className="inline-flex items-center justify-center h-7 min-w-[28px] px-2 border border-blue-600 bg-blue-600 text-white text-[11px] font-bold rounded-sm">
+                    {size}
+                  </span>
+                </div>
+              )}
             </div>
 
-            <div className="text-lg font-bold text-blue-600">
+            <div className="text-lg font-bold text-blue-600 whitespace-nowrap">
               NGN{price.toFixed(2)}
             </div>
           </div>
@@ -84,9 +104,7 @@ export default function CartItems({
                 type="number"
                 value={quantity}
                 onChange={(e) =>
-                  handleQuantityChange(
-                    parseInt(e.target.value) || 1
-                  )
+                  handleQuantityChange(parseInt(e.target.value) || 1)
                 }
                 className="w-12 text-center border-x border-gray-300 bg-white outline-none"
               />

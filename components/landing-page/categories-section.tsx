@@ -50,6 +50,13 @@ const products: Product[] = [
 
 export default function CategorySection() {
   const [addedToCart, setAddedToCart] = useState<string | null>(null)
+  const [selectedSizes, setSelectedSizes] = useState<Record<string, number>>(
+    Object.fromEntries(products.map((p) => [p.id, 40]))
+  )
+
+  const handleSizeSelect = (productId: string, size: number) => {
+    setSelectedSizes((prev) => ({ ...prev, [productId]: size }))
+  }
 
   const handleAddToCart = (productId: string) => {
     setAddedToCart(productId)
@@ -114,6 +121,29 @@ export default function CategorySection() {
                 <p className="mt-2 text-sm font-semibold text-blue-600">
                   ${product.price}
                 </p>
+
+                {/* Size Picker */}
+                <div className="mt-4">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">
+                    Size (EU)
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {Array.from({ length: 9 }, (_, i) => 38 + i).map((size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => handleSizeSelect(product.id, size)}
+                        className={`w-8 h-8 text-[11px] font-bold transition-all border flex items-center justify-center cursor-pointer ${
+                          selectedSizes[product.id] === size
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'border-gray-200 text-gray-700 bg-white hover:border-gray-400'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
                 <SubmitButton
                   type="button"

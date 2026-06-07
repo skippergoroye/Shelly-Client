@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Heart, Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Heart, ShoppingCart, User } from "lucide-react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/app/store";
@@ -14,8 +13,6 @@ interface NavbarProps {
 }
 
 const Navbar = ({ variant }: NavbarProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const [cartCount, setCartCount] = useState(0);
   const count = useSelector((state: RootState) => state.cart.items.length);
 

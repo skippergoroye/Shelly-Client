@@ -120,7 +120,8 @@ const CartPage = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-white  px-6 ">
+      
+      <div className="container-max px-6 md:px-12  g-white  px-6 ">
         <div className=" py-12">
           <div className="flex items-center justify-between mb-12">
             <h1 className="lg:text-4xl font-bold text-black">

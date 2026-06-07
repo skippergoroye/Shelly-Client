@@ -34,6 +34,7 @@ export function ProductCard({
 }: ProductCardProps) {
   const dispatch = useDispatch();
   const [isAdding, setIsAdding] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<number>(40);
 
   const handleAddToCart = async () => {
     try {
@@ -41,8 +42,8 @@ export function ProductCard({
 
       dispatch(
         addToCart({
-          id,
-          name,
+          id: `${id}-${selectedSize}`,
+          name: `${name} (EU ${selectedSize})`,
           price,
           quantity: 1,
           images,
@@ -52,7 +53,7 @@ export function ProductCard({
       );
 
       ToastNotification({
-        title: `${name} added to cart!`,
+        title: `${name} (EU ${selectedSize}) added!`,
         description: "Item has been added to your cart.",
         type: "success",
       });
@@ -122,12 +123,35 @@ export function ProductCard({
         </div>
       </Link>
 
-      <div className="px-5 pb-5">
+      <div className="px-5 pb-5 flex flex-col gap-4">
+        {/* Size Selection */}
+        <div>
+          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">
+            Size (EU)
+          </span>
+          <div className="flex flex-wrap gap-1">
+            {Array.from({ length: 9 }, (_, i) => 38 + i).map((size) => (
+              <button
+                key={size}
+                type="button"
+                onClick={() => setSelectedSize(size)}
+                className={`w-8 h-8 text-[11px] font-bold transition-all border flex items-center justify-center cursor-pointer ${
+                  selectedSize === size
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "border-gray-200 text-gray-700 bg-white hover:border-gray-400"
+                }`}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <SubmitButton
           type="button"
           clickFn={handleAddToCart}
           isLoading={isAdding}
-          className="mt-4 w-full px-4 py-5.5 bg-[color:var(--primary)] text-sm font-semibold text-white transition-colors duration-200"
+          className="w-full px-4 py-5.5 bg-[color:var(--primary)] text-sm font-semibold text-white transition-colors duration-200"
         >
           {isAdding ? "Added to Cart" : "Add to Cart"}
         </SubmitButton>

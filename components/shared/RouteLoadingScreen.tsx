@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import Logo from "@/public/images/IC360-logo.svg";
 import { Spinner } from "../ui/spinner";
 
 type RouteLoadingScreenProps = {
@@ -11,17 +9,25 @@ type RouteLoadingScreenProps = {
 
 export default function RouteLoadingScreen({ message }: RouteLoadingScreenProps) {
   return (
-      <div className="fixed inset-0 z-[9999] grid place-items-center bg-white/30 backdrop-blur-sm">
-      <div className="flex flex-col items-center gap-4">
-        <h1 className="animate-pulse text-2xl font-bold text-[color:var(--primary)]">Shelly Mart</h1>
-        {/* <Image src={Logo} alt="logo logo" className="h-auto w-auto animate-pulse" priority /> */}
-        <div className="flex items-center gap-3 text-sm text-[#5F738C]">
-          <Spinner />
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/40 backdrop-blur-[3px]">
+      {/* Loader card */}
+      <div className="flex flex-col items-center gap-4 bg-white/80 px-10 py-8 backdrop-blur-sm">
+        {/* Brand name with shimmer pulse */}
+        <h1 className="animate-pulse text-2xl font-bold tracking-tight text-[color:var(--primary)]">
+          Shelly Collections
+        </h1>
+
+        {/* Spinner + message */}
+        {/* <div className="flex items-center gap-2.5 text-sm text-gray-500">
+          <Spinner className="size-5 text-[color:var(--primary)]" />
           <span>{message ?? "Loading..."}</span>
+        </div> */}
+
+        {/* Progress bar animation */}
+        <div className="w-40 h-[3px] bg-gray-200 rounded-full overflow-hidden mt-1">
+          <div className="h-full bg-[color:var(--primary)] rounded-full animate-[progress_1.4s_ease-in-out_infinite]" />
         </div>
       </div>
     </div>
   );
 }
-
-

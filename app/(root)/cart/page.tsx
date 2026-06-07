@@ -16,6 +16,7 @@ import {
   clearCart,
 } from "@/redux/features/cart/cartSlice";
 import CartItems from "./_components/cart-items";
+import LoadingBar from "@/components/shared/LoadingBar";
 
 interface SavedItemType {
   id: string;
@@ -143,8 +144,8 @@ const CartPage = () => {
          
 
               {!mounted ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-600 text-lg">Loading cart...</p>
+                <div className="text-center py-12 place-items-center">
+                  <LoadingBar loadingText="Fetchin Loading cart.." />
                 </div>
               ) : cartItems.length > 0 ? (
                 cartItems.map((item) => (
@@ -180,7 +181,7 @@ const CartPage = () => {
             </div>
           </div>
 
-          <SavedForLater items={savedItems} onMoveToCart={handleMoveToCart} />
+  
         </div>
       </div>
 

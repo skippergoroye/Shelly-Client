@@ -83,7 +83,7 @@ export default function CategorySection() {
 
           <a
             href="#"
-            className="text-sm font-semibold text-[color:var(--primary)] underline"
+            className="text-sm font-semibold text-xl text-[color:var(--primary)] underline"
           >
             View All
           </a>

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import { Button } from '@/components/ui/button';
+import SubmitButton from '@/components/shared/SubmitButton';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import HeroImg from "../../public/img/hero-Img.png"
@@ -42,18 +42,19 @@ const Hero = () => {
 
           <div className="flex flex-wrap gap-4 pt-2">
             <Link href="/products">
-              <Button className="cursor-pointer bg-[color:var(--primary)] text-[color:var(--on-primary)] hover:bg-[color:var(--primary)] h-12 px-8 gap-2 shadow-lg shadow-[color:var(--primary-container)]/20 font-semibold rounded-md">
+              <SubmitButton type="button" className="cursor-pointer bg-[color:var(--primary)] text-[color:var(--on-primary)] hover:bg-[color:var(--primary)] h-12 px-8 gap-2 shadow-lg shadow-[color:var(--primary-container)]/20 font-semibold rounded-md">
                 Shop Now
                 <ArrowRight size={20} />
-              </Button>
+              </SubmitButton>
             </Link>
             <Link href="/products">
-              <Button
+              <SubmitButton
+                type="button"
                 variant="outline"
                 className="cursor-pointer bg-white border-[color:var(--outline-variant)] text-[color:var(--on-surface)] h-12 px-8 hover:bg-[color:var(--surface-container-high)] font-semibold rounded-md"
               >
                 Explore Collections
-              </Button>
+              </SubmitButton>
             </Link>
           </div>
         </div>

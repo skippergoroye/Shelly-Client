@@ -4,15 +4,10 @@ import { Loader } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 
-export interface SubmitButtonProps {
-  type?: any;
+export interface SubmitButtonProps extends React.ComponentProps<typeof Button> {
   isLoading?: boolean;
   loading?: boolean;
-  disabled?: boolean;
-  className?: string;
   loadingText?: string;
-  children: React.ReactNode;
-  // clickFn?: () => void;
   clickFn?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -26,13 +21,15 @@ const SubmitButton = ({
   clickFn,
   children,
   disabled,
+  ...props
 }: SubmitButtonProps) => {
   return (
     <Button
       type={type}
       disabled={isLoading || loading || disabled}
-      className={cn("cursor-pointer", className || "text-white")}
+      className={cn("cursor-pointer", className)}
       onClick={clickFn}
+      {...props}
     >
       {isLoading || loading ? (
         <div className="flex items-center gap-4">

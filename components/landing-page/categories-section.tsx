@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
+import SubmitButton from '@/components/shared/SubmitButton'
 
 import ImgOne from '../../public/img/shoe-one.png'
 import ImgTwo from '../../public/img/shoe-two.png'
@@ -114,18 +115,15 @@ export default function CategorySection() {
                   ${product.price}
                 </p>
 
-                <button
-                  onClick={() => handleAddToCart(product.id)}
-                  className={`mt-4 w-full rounded px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 ${
-                    addedToCart === product.id
-                      ? 'bg-green-500'
-                      : 'bg-blue-600 hover:bg-blue-700'
-                  }`}
+                <SubmitButton
+                  type="button"
+                  clickFn={() => handleAddToCart(product.id)}
+                  className="mt-4 w-full px-4 py-5.5 bg-[color:var(--primary)] text-sm font-semibold text-white transition-colors duration-200"
                 >
                   {addedToCart === product.id
                     ? 'Added to Cart'
                     : 'Add to Cart'}
-                </button>
+                </SubmitButton>
               </div>
             </div>
           ))}

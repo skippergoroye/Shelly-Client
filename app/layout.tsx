@@ -25,14 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("antialiased", inter.variable, "font-sans", geist.variable)} suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("shellyCollections-theme");if(t==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})();`,
-          }}
-        />
-      </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

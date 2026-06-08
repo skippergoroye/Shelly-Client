@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Search, MoreVertical, ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { MoreVertical } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table";
+import DataTable from "@/components/shared/DataTable";
 import SubmitButton from "@/components/shared/SubmitButton";
 
+// ── Types ──────────────────────────────────────────────
 interface Order {
   id: string;
   customerInit?: string;
@@ -16,6 +17,7 @@ interface Order {
   date: string;
 }
 
+// ── Sample data ────────────────────────────────────────
 const INITIAL_ORDERS: Order[] = [
   {
     id: "#HR-8821",
@@ -36,7 +38,8 @@ const INITIAL_ORDERS: Order[] = [
   {
     id: "#HR-8823",
     customerName: "Marcus Chen",
-    customerAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120&h=120",
+    customerAvatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120&h=120",
     address: "15 Orchard Rd, SG",
     status: "Pending",
     date: "Oct 25, 2024",
@@ -51,155 +54,113 @@ const INITIAL_ORDERS: Order[] = [
   },
 ];
 
+// ── Status badge styles ────────────────────────────────
+const STATUS_STYLES: Record<Order["status"], string> = {
+  Shipped: "bg-green-50 text-green-700 border border-green-200/50",
+  Processing: "bg-blue-50 text-blue-700 border border-blue-200/50",
+  Pending: "bg-orange-50/70 text-orange-700 border border-orange-200/50",
+};
+
+// ── Column definitions ────────────────────────────────
+const columns: ColumnDef<Order, any>[] = [
+  {
+    accessorKey: "id",
+    header: "Order ID",
+    cell: ({ row }) => (
+      <Link
+        href={`/admin/orders/${row.original.id.replace("#", "")}`}
+        className="font-bold text-[#0066FF] text-xs hover:underline"
+      >
+        {row.original.id}
+      </Link>
+    ),
+  },
+  {
+    accessorKey: "customerName",
+    header: "Customer",
+    cell: ({ row }) => {
+      const order = row.original;
+      return (
+        <div className="flex items-center gap-3">
+          {order.customerAvatar ? (
+            <div className="w-7 h-7 rounded-full overflow-hidden border border-gray-100 shrink-0">
+              <img
+                src={order.customerAvatar}
+                alt={order.customerName}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500 border border-gray-200/50 shrink-0">
+              {order.customerInit}
+            </div>
+          )}
+          <span className="font-bold text-xs text-gray-800">
+            {order.customerName}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "address",
+    header: "Address",
+    cell: ({ getValue }) => (
+      <span className="text-xs text-gray-400 font-medium">
+        {getValue<string>()}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue<Order["status"]>();
+      return (
+        <span
+          className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-extrabold tracking-wide ${STATUS_STYLES[status]}`}
+        >
+          {status}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ getValue }) => (
+      <span className="text-xs text-gray-400 font-medium">
+        {getValue<string>()}
+      </span>
+    ),
+  },
+  {
+    id: "actions",
+    header: "Action",
+    cell: () => (
+      <div className="text-right">
+        <SubmitButton
+          type="button"
+          className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-50 rounded cursor-pointer bg-transparent border-0 shadow-none h-auto"
+        >
+          <MoreVertical className="w-4 h-4" />
+        </SubmitButton>
+      </div>
+    ),
+  },
+];
+
+// ── Component ──────────────────────────────────────────
 export function RecentTransactions() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [orders] = useState<Order[]>(INITIAL_ORDERS);
-
-  // Filter orders dynamically based on search query
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.status.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <Card className="relative select-none overflow-visible">
-     
-
-      {/* Table Header Row */}
-      <div className="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100">
-        <h3 className="text-sm font-bold text-gray-800">
-          Recent Orders
-        </h3>
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search orders..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-gray-50 text-xs text-gray-700 placeholder:text-gray-400 border border-transparent rounded-lg focus:outline-none focus:bg-white focus:border-gray-200 transition-all font-medium"
-          />
-        </div>
-      </div>
-
-      {/* Table Body Container */}
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-[700px] text-left border-collapse">
-          <thead>
-            <tr className="border-b border-gray-100 text-[10px] font-bold text-gray-400 tracking-wider uppercase bg-gray-50/40">
-              <th className="py-4 px-6">Order ID</th>
-              <th className="py-4 px-6">Customer</th>
-              <th className="py-4 px-6">Address</th>
-              <th className="py-4 px-6">Status</th>
-              <th className="py-4 px-6">Date</th>
-              <th className="py-4 px-6 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredOrders.length > 0 ? (
-              filteredOrders.map((order) => (
-                <tr
-                  key={order.id}
-                  className="border-b border-gray-150 last:border-none hover:bg-gray-50/30 transition-colors"
-                >
-                  {/* Order ID */}
-                  <td className="py-4 px-6 font-bold text-[#0066FF] text-xs">
-                    <Link href={`/admin/orders/${order.id.replace("#", "")}`} className="hover:underline">
-                      {order.id}
-                    </Link>
-                  </td>
-
-                  {/* Customer */}
-                  <td className="py-4 px-6 text-xs text-gray-800 font-bold">
-                    <div className="flex items-center gap-3">
-                      {order.customerAvatar ? (
-                        <div className="w-7 h-7 rounded-full overflow-hidden border border-gray-100 shrink-0">
-                          <img
-                            src={order.customerAvatar}
-                            alt={order.customerName}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500 border border-gray-200/50 shrink-0">
-                          {order.customerInit}
-                        </div>
-                      )}
-                      <span>{order.customerName}</span>
-                    </div>
-                  </td>
-
-                  {/* Address */}
-                  <td className="py-4 px-6 text-xs text-gray-400 font-medium">
-                    {order.address}
-                  </td>
-
-                  {/* Status */}
-                  <td className="py-4 px-6">
-                    <span
-                      className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-extrabold tracking-wide ${
-                        order.status === "Shipped"
-                          ? "bg-green-50 text-green-700 border border-green-200/50"
-                          : order.status === "Processing"
-                          ? "bg-blue-50 text-blue-700 border border-blue-200/50"
-                          : "bg-orange-50/70 text-orange-700 border border-orange-200/50"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-
-                  {/* Date */}
-                  <td className="py-4 px-6 text-xs text-gray-400 font-medium">
-                    {order.date}
-                  </td>
-
-                  {/* Action */}
-                  <td className="py-4 px-6 text-right">
-                    <SubmitButton
-                      type="button"
-                      className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-50 rounded cursor-pointer bg-transparent border-0 shadow-none h-auto"
-                    >
-                      <MoreVertical className="w-4 h-4" />
-                    </SubmitButton>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={6}
-                  className="py-12 text-center text-xs font-semibold text-gray-400"
-                >
-                  No matching orders found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Table Footer / Pagination */}
-      <div className="p-5 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-gray-100 text-[10px] font-bold text-gray-400 tracking-wider uppercase bg-gray-50/20">
-        <span>Showing {filteredOrders.length} of 1284 entries</span>
-        <div className="flex items-center gap-2">
-          <SubmitButton
-            type="button"
-            className="w-6.5 h-6.5 flex items-center justify-center border border-gray-200 bg-white hover:bg-gray-50 rounded text-gray-500 cursor-pointer shadow-sm transition-colors h-auto p-0"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" />
-          </SubmitButton>
-          <SubmitButton
-            type="button"
-            className="w-6.5 h-6.5 flex items-center justify-center border border-gray-200 bg-white hover:bg-gray-50 rounded text-gray-500 cursor-pointer shadow-sm transition-colors h-auto p-0"
-          >
-            <ChevronRight className="w-3.5 h-3.5" />
-          </SubmitButton>
-        </div>
-      </div>
-    </Card>
+    <DataTable<Order>
+      title="Recent Orders"
+      columns={columns}
+      data={INITIAL_ORDERS}
+      searchPlaceholder="Search orders..."
+      pageSize={4}
+      totalCount={1284}
+      emptyMessage="No matching orders found."
+    />
   );
 }

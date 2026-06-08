@@ -8,7 +8,7 @@ import LoadingBar from "@/components/shared/LoadingBar";
 const CheckoutForm = dynamic(() => import("./_components/checkout-form"), {
   ssr: false,
   loading: () => (
-    <div className="min-h-[60vh] flex flex-col justify-center items-center bg-white">
+    <div className="min-h-[60vh] flex flex-col justify-center items-center bg-[color:var(--background)]">
       <LoadingBar loadingText="Loading Checkout..." />
     </div>
   ),
@@ -16,7 +16,7 @@ const CheckoutForm = dynamic(() => import("./_components/checkout-form"), {
 
 export default function CheckoutPage() {
   return (
-    <div className="bg-white min-h-screen flex flex-col justify-between">
+    <div className="bg-[color:var(--background)] min-h-screen flex flex-col justify-between">
       <div>
         <Navbar />
         <CheckoutForm />

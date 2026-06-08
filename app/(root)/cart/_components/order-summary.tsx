@@ -28,26 +28,26 @@ export default function OrderSummary({
   const total = subtotal + shippingCost + tax;
 
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-xl px-6 sticky top-8">
-      <h2 className="text-xl font-bold text-black mb-6">Order Summary</h2>
+    <div className="bg-[color:var(--surface)] border border-[color:var(--outline-variant)] rounded-xl px-6 sticky top-8">
+      <h2 className="text-xl font-bold text-[color:var(--on-surface)] mb-6">Order Summary</h2>
 
       {/* Summary Items */}
-      <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
-        <div className="flex justify-between text-gray-700">
+      <div className="space-y-4 mb-6 border-b border-[color:var(--outline-variant)] pb-6">
+        <div className="flex justify-between text-[color:var(--on-surface-variant)]">
           <span>Subtotal</span>
           <span className="font-medium">
             {mounted ? `NGN${subtotal.toFixed(2)}` : "NGN0.00"}
           </span>
         </div>
 
-        <div className="flex justify-between text-gray-700">
+        <div className="flex justify-between text-[color:var(--on-surface-variant)]">
           <span>Shipping</span>
           <span className="font-medium text-green-600">
             {mounted ? "FREE" : "—"}
           </span>
         </div>
 
-        <div className="flex justify-between text-gray-700">
+        <div className="flex justify-between text-[color:var(--on-surface-variant)]">
           <span>Estimated Tax</span>
           <span className="font-medium">
             {mounted ? `NGN${tax.toFixed(2)}` : "NGN0.00"}
@@ -58,7 +58,7 @@ export default function OrderSummary({
       {/* Total */}
       <div className="flex justify-between items-center mb-6 text-xl font-bold">
         <span>Total</span>
-        <span className="text-blue-600">
+        <span className="text-[color:var(--primary)]">
           {mounted ? `NGN${total.toFixed(2)}` : "NGN0.00"}
         </span>
       </div>
@@ -86,34 +86,34 @@ export default function OrderSummary({
       )}
 
       {/* Security Message */}
-      <div className="flex items-center gap-2 text-gray-600 text-sm mb-6 p-3 bg-white rounded-lg border border-gray-200">
+      <div className="flex items-center gap-2 text-[color:var(--on-surface-variant)] text-sm mb-6 p-3 bg-[color:var(--background)] rounded-lg border border-[color:var(--outline-variant)]">
         <ShieldCheckIcon className="w-5 h-5 flex-shrink-0 text-green-600" />
         <span>Secure checkout powered by Paystack.</span>
       </div>
 
       {/* Promo Code */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-[color:var(--on-surface-variant)] mb-2">
           Promo Code
         </label>
         <div className="flex gap-2">
           <input
             type="text"
             placeholder="Enter code"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full border border-[color:var(--outline-variant)] rounded-lg px-3 py-2 text-sm outline-none focus:border-[color:var(--primary)] focus:ring-2 focus:ring-[color:var(--primary)]/20 bg-[color:var(--background)] text-[color:var(--on-surface)]"
           />
-          <button className="bg-blue-200 hover:bg-blue-300 text-blue-600 font-semibold px-4 py-2 rounded-lg transition-colors text-sm">
+          <button className="bg-[color:var(--primary)]/20 hover:bg-[color:var(--primary)]/30 text-[color:var(--primary)] font-semibold px-4 py-2 rounded-lg transition-colors text-sm">
             Apply
           </button>
         </div>
       </div>
 
       {/* Help Link */}
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-[color:var(--on-surface-variant)]">
         Need help?{" "}
         <a
           href="#"
-          className="text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-1"
+          className="text-[color:var(--primary)] hover:text-[color:var(--primary)] font-medium inline-flex items-center gap-1"
         >
           Contact Support
           <ExternalLink className="w-3 h-3" />

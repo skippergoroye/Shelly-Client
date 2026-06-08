@@ -11,7 +11,7 @@ const Hero = () => {
  
 
   return (
-    <section className="relative w-full h-[90vh] flex items-center bg-[#faf8ff] overflow-hidden">
+    <section className="relative w-full h-[90vh] flex items-center bg-[color:var(--surface)] overflow-hidden">
    
       <div className="absolute inset-0 z-0">
         <Image
@@ -22,9 +22,9 @@ const Hero = () => {
           priority
         />
       
-        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-[#faf8ff] via-[#faf8ff]/20 to-transparent z-10" />
+        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-[color:var(--surface)] via-[color:var(--surface)]/20 to-transparent z-10" />
         {/* High-opacity light overlay for text legibility (mobile) */}
-        <div className="absolute inset-0 md:hidden bg-[#faf8ff]/90 z-10" />
+        <div className="absolute inset-0 md:hidden bg-[color:var(--surface)]/90 z-10" />
       </div>
 
       {/* Hero Content */}
@@ -51,7 +51,7 @@ const Hero = () => {
               <SubmitButton
                 type="button"
                 variant="outline"
-                className="cursor-pointer bg-white border-[color:var(--outline-variant)] text-[color:var(--on-surface)] h-12 px-8 hover:bg-[color:var(--surface-container-high)] font-semibold rounded-md"
+                className="cursor-pointer bg-[color:var(--surface)] border-[color:var(--outline-variant)] text-[color:var(--on-surface)] h-12 px-8 hover:bg-[color:var(--surface-container-high)] font-semibold rounded-md"
               >
                 Explore Collections
               </SubmitButton>

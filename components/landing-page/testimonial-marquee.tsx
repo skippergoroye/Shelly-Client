@@ -28,7 +28,7 @@ const testimonials: Testimonial[] = [
 
 export function TestimonialMarquee() {
   return (
-  <div className="sticky top-0 left-0 right-0 z-50 w-full bg-blue-600 h-14 flex items-center">
+  <div className="sticky top-0 left-0 right-0 z-50 w-full bg-[color:var(--primary)] h-14 flex items-center">
   <Marquee
     gradient={false}
     speed={50}

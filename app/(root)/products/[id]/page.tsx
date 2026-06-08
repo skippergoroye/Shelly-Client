@@ -17,7 +17,7 @@ export default async function ProductDetailsPage({ params }: ProductDetailsPageP
   return (
     <>
       <Navbar />
-      <section className="container-max px-6 md:px-12 mx-auto bg-white text-gray-900">
+      <section className="container-max px-6 md:px-12 mx-auto bg-[color:var(--background)] text-[color:var(--on-surface)]">
         <Breadcrumb
           items={[
             { label: "Home", href: "/" },

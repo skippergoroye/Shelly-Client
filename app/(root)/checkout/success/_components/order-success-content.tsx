@@ -104,26 +104,26 @@ export default function OrderSuccessContent() {
 
           {/* Heading */}
           <div>
-            <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">
+            <h1 className="text-5xl md:text-6xl font-extrabold text-[color:var(--on-surface)] leading-tight tracking-tight">
               Your Bespoke<br />Journey Begins.
             </h1>
-            <p className="text-gray-600 mt-5 text-base leading-relaxed max-w-lg">
+            <p className="text-[color:var(--on-surface-variant)] mt-5 text-base leading-relaxed max-w-lg">
               Thank you for choosing Shelly Collections. Our master artisans have been notified and are
               preparing to craft your custom selection with technical precision.
             </p>
           </div>
 
-          <hr className="border-gray-200" />
+          <hr className="border-[color:var(--outline-variant)]" />
 
           {/* Order Meta */}
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Order Number</p>
-              <p className="text-2xl font-extrabold text-gray-900">#{order.orderNumber}</p>
+              <p className="text-xs font-bold text-[color:var(--on-surface-variant)] uppercase tracking-widest mb-1">Order Number</p>
+              <p className="text-2xl font-extrabold text-[color:var(--on-surface)]">#{order.orderNumber}</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Est. Delivery</p>
-              <p className="text-2xl font-extrabold text-gray-900">{order.estimatedDelivery}</p>
+              <p className="text-xs font-bold text-[color:var(--on-surface-variant)] uppercase tracking-widest mb-1">Est. Delivery</p>
+              <p className="text-2xl font-extrabold text-[color:var(--on-surface)]">{order.estimatedDelivery}</p>
             </div>
           </div>
 
@@ -140,7 +140,7 @@ export default function OrderSuccessContent() {
 
             <button
               onClick={handleDownload}
-              className="border border-gray-300 hover:border-gray-400 text-gray-800 font-semibold px-8 py-3 rounded flex items-center gap-2 transition-colors cursor-pointer text-sm"
+              className="border border-[color:var(--outline-variant)] hover:border-[color:var(--outline)] text-[color:var(--on-surface)] font-semibold px-8 py-3 rounded flex items-center gap-2 transition-colors cursor-pointer text-sm"
             >
               <Download className="w-4 h-4" /> Download Invoice
             </button>
@@ -149,8 +149,8 @@ export default function OrderSuccessContent() {
 
         {/* Right — Order Summary */}
         <div className="lg:col-span-2">
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-5">
-            <h2 className="text-lg font-bold text-gray-900">Order Summary</h2>
+          <div className="bg-[color:var(--surface)] border border-[color:var(--outline-variant)] rounded-xl p-6 shadow-sm space-y-5">
+            <h2 className="text-lg font-bold text-[color:var(--on-surface)]">Order Summary</h2>
 
             {/* Items */}
             <div className="space-y-4 max-h-[260px] overflow-y-auto pr-1">
@@ -166,8 +166,8 @@ export default function OrderSuccessContent() {
                       className="h-16 w-16 rounded object-cover border border-gray-100"
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 text-sm truncate">{baseName}</h3>
-                      <p className="text-xs text-gray-500 mt-0.5 truncate">
+                      <h3 className="font-semibold text-[color:var(--on-surface)] text-sm truncate">{baseName}</h3>
+                      <p className="text-xs text-[color:var(--on-surface-variant)] mt-0.5 truncate">
                         {item.category}
                         {size ? ` / Size ${size.replace("EU ", "")}` : ""} / Bespoke
                       </p>
@@ -180,28 +180,28 @@ export default function OrderSuccessContent() {
               })}
             </div>
 
-            <hr className="border-gray-200" />
+            <hr className="border-[color:var(--outline-variant)]" />
 
             {/* Breakdown */}
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-[color:var(--on-surface-variant)]">
                 <span>Subtotal</span>
-                <span className="font-medium text-gray-900">NGN{order.subtotal.toFixed(2)}</span>
+                <span className="font-medium text-[color:var(--on-surface)]">NGN{order.subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-[color:var(--on-surface-variant)]">
                 <span>Shipping (Express)</span>
                 <span className="font-bold text-[color:var(--primary)]">FREE</span>
               </div>
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-[color:var(--on-surface-variant)]">
                 <span>Tax</span>
-                <span className="font-medium text-gray-900">NGN{order.tax.toFixed(2)}</span>
+                <span className="font-medium text-[color:var(--on-surface)]">NGN{order.tax.toFixed(2)}</span>
               </div>
             </div>
 
-            <hr className="border-gray-200" />
+            <hr className="border-[color:var(--outline-variant)]" />
 
             {/* Total */}
-            <div className="flex justify-between items-center text-xl font-extrabold text-gray-900">
+            <div className="flex justify-between items-center text-xl font-extrabold text-[color:var(--on-surface)]">
               <span>Total</span>
               <span>NGN{order.total.toFixed(2)}</span>
             </div>

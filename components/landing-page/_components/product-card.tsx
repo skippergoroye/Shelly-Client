@@ -57,7 +57,7 @@ export function ProductCard({
   };
 
   return (
-    <div className="bg-white border border-[color:var(--outline-variant)] rounded-xl overflow-hidden flex flex-col group hover:shadow-lg transition-all duration-300">
+    <div className="bg-[color:var(--surface)] border border-[color:var(--outline-variant)] rounded-xl overflow-hidden flex flex-col group hover:shadow-lg transition-all duration-300">
       <div className="aspect-[4/5] relative overflow-hidden">
         <Image
           src={image}
@@ -78,7 +78,7 @@ export function ProductCard({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-3 right-3 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-[color:var(--outline)] hover:text-red-500 transition-colors"
+          className="absolute top-3 right-3 w-10 h-10 bg-[color:var(--surface)]/80 backdrop-blur-sm rounded-full flex items-center justify-center text-[color:var(--outline)] hover:text-[color:var(--error)] transition-colors"
         >
           <Heart size={20} />
         </Button>

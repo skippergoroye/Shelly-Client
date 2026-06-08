@@ -39,7 +39,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
 
   if (isError || !product) {
     return (
-      <div className="text-gray-500">
+      <div className="text-[color:var(--on-surface-variant)]">
         Failed to load product details.
       </div>
     )
@@ -82,18 +82,18 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
   return (
     <div className="flex flex-col gap-6">
       <div className="inline-block w-fit">
-        <span className="bg-blue-100 text-blue-600 text-xs font-semibold px-3 py-1 rounded-full">
+        <span className="bg-[color:var(--primary)]/10 text-[color:var(--primary)] text-xs font-semibold px-3 py-1 rounded-full">
           {product.availabilityStatus.toUpperCase()}
         </span>
       </div>
 
       <div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl font-bold text-[color:var(--on-surface)] mb-4">
           {product.title}
         </h1>
 
         <div className="flex items-center gap-2">
-          <span className="text-3xl font-bold text-blue-600">
+          <span className="text-3xl font-bold text-[color:var(--primary)]">
             NGN{product.price.toFixed(2)}
           </span>
 
@@ -105,25 +105,25 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
                 className={
                   i < Math.round(product.rating)
                     ? 'fill-amber-400 text-amber-400'
-                    : 'text-gray-300'
+                    : 'text-[color:var(--on-surface-variant)]'
                 }
               />
             ))}
 
-            <span className="text-gray-600 text-sm ml-2">
+            <span className="text-[color:var(--on-surface-variant)] text-sm ml-2">
               ({product.reviews.length} Reviews)
             </span>
           </div>
         </div>
       </div>
 
-      <p className="text-gray-600 text-sm leading-relaxed">
+      <p className="text-[color:var(--on-surface-variant)] text-sm leading-relaxed">
         {product.description}
       </p>
 
       {/* Color */}
       <div>
-        <label className="block text-sm font-semibold text-gray-900 mb-3">
+        <label className="block text-sm font-semibold text-[color:var(--on-surface)] mb-3">
           Color: {colors[selectedColor].name}
         </label>
 
@@ -134,8 +134,8 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
               onClick={() => setSelectedColor(index)}
               className={`w-10 h-10 rounded-full border-2 transition-all ${
                 selectedColor === index
-                  ? 'border-gray-900 ring-2 ring-offset-2 ring-gray-900'
-                  : 'border-gray-300'
+                  ? 'border-[color:var(--on-surface)] ring-2 ring-offset-2 ring-[color:var(--on-surface)]'
+                  : 'border-[color:var(--outline-variant)]'
               } ${color.value}`}
               title={color.name}
             />
@@ -146,13 +146,13 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
       {/* Size */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <label className="block text-sm font-semibold text-gray-900">
+          <label className="block text-sm font-semibold text-[color:var(--on-surface)]">
             Select Size
           </label>
 
           <a
             href="#"
-            className="text-blue-600 text-xs font-semibold hover:underline"
+            className="text-[color:var(--primary)] text-xs font-semibold hover:underline"
           >
             Size Guide
           </a>
@@ -163,11 +163,11 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
             <button
               key={size}
               onClick={() => setSelectedSize(sizes.indexOf(size))}
-              className={`py-2 px-4 rounded-lg border-2 font-semibold transition-all ${
-                selectedSize === sizes.indexOf(size)
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'border-gray-300 text-gray-900 hover:border-gray-400'
-              }`}
+className={`py-2 px-4 rounded-lg border-2 font-semibold transition-all ${
+                  selectedSize === sizes.indexOf(size)
+                    ? 'bg-[color:var(--primary)] text-white border-[color:var(--primary)]'
+                    : 'border-[color:var(--outline-variant)] text-[color:var(--on-surface)] hover:border-[color:var(--outline)]'
+                }`}
             >
               {size}
             </button>
@@ -179,7 +179,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
         size="lg"
         onClick={handleAddToCart}
         disabled={isAdding}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full bg-[color:var(--primary)] hover:bg-[color:var(--primary)]/80 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50"
       >
         <ShoppingCart size={20} />
 
@@ -188,7 +188,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
 
       <button
         onClick={() => setIsWishlisted(!isWishlisted)}
-        className="flex items-center justify-center gap-2 py-3 border-2 border-gray-300 rounded-lg text-gray-900 font-semibold hover:border-gray-400 transition-colors"
+        className="flex items-center justify-center gap-2 py-3 border-2 border-[color:var(--outline-variant)] rounded-lg text-[color:var(--on-surface)] font-semibold hover:border-[color:var(--outline)] transition-colors"
       >
         <Heart
           size={20}
@@ -198,30 +198,30 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
         Save to Wishlist
       </button>
 
-      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[color:var(--outline-variant)]">
         <div className="flex items-center gap-3">
-          <Truck size={20} className="text-gray-700" />
+          <Truck size={20} className="text-[color:var(--on-surface-variant)]" />
 
           <div>
-            <p className="text-sm font-semibold text-gray-900">
+            <p className="text-sm font-semibold text-[color:var(--on-surface)]">
               Free Shipping
             </p>
 
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-[color:var(--on-surface-variant)]">
               On orders over NGN500
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <Shield size={20} className="text-gray-700" />
+          <Shield size={20} className="text-[color:var(--on-surface-variant)]" />
 
           <div>
-            <p className="text-sm font-semibold text-gray-900">
+            <p className="text-sm font-semibold text-[color:var(--on-surface)]">
               {product.warrantyInformation}
             </p>
 
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-[color:var(--on-surface-variant)]">
               {product.returnPolicy}
             </p>
           </div>

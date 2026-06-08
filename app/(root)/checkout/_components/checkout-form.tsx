@@ -143,8 +143,8 @@ export default function CheckoutForm() {
   if (cartItems.length === 0 && !isRedirecting) {
     return (
       <div className="container-max px-6 py-24 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Your Cart is Empty</h1>
-        <p className="text-gray-600 mb-8">Please add products to your cart before proceeding to checkout.</p>
+        <h1 className="text-2xl font-bold text-[color:var(--on-surface)] mb-4">Your Cart is Empty</h1>
+        <p className="text-[color:var(--on-surface-variant)] mb-8">Please add products to your cart before proceeding to checkout.</p>
         <SubmitButton
           type="button"
           clickFn={() => router.push("/products")}
@@ -169,7 +169,7 @@ export default function CheckoutForm() {
       {/* Title */}
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-[color:var(--primary)] ">Secure Checkout</h1>
-        <p className="text-black text-lg mt-1">Refining your artisanal selection.</p>
+        <p className="text-[color:var(--on-surface-variant)] text-lg mt-1">Refining your artisanal selection.</p>
       </div>
 
       <Form {...form}>

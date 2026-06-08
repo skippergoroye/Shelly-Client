@@ -88,13 +88,13 @@ export default function CategorySection() {
   }
 
   return (
-    <div className="w-full bg-white px-6 py-12">
-    <section className="container-max px-6 md:px-12  w-full bg-white px-6 py-12">
-      <div className="mx-auto max-w-7xl bg-white">
+    <div className="w-full bg-[color:var(--background)] px-6 py-12">
+    <section className="container-max px-6 md:px-12 w-full bg-[color:var(--background)] px-6 py-12">
+      <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-10 flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold tracking-widest text-gray-600">
+            <p className="text-xs font-bold tracking-widest text-[color:var(--on-surface-variant)]">
               CURATED EDITIONS
             </p>
             <h1 className="mt-2 text-4xl font-bold text-[color:var(--primary)]">
@@ -115,10 +115,10 @@ export default function CategorySection() {
           {products.map((product) => (
             <div
               key={product.id}
-              className="overflow-hidden border border-gray-300 bg-white"
+              className="overflow-hidden border border-[color:var(--outline-variant)] bg-[color:var(--surface)]"
             >
               {/* Product Image */}
-              <div className="aspect-square overflow-hidden bg-white">
+              <div className="aspect-square overflow-hidden bg-[color:var(--surface)]">
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -131,21 +131,21 @@ export default function CategorySection() {
 
               {/* Product Info */}
               <div className="flex flex-col p-5">
-                <p className="text-xs font-bold tracking-wider text-gray-600">
+                <p className="text-xs font-bold tracking-wider text-[color:var(--on-surface-variant)]">
                   {product.brand}
                 </p>
 
-                <h3 className="mt-3 text-lg font-bold text-black">
+                <h3 className="mt-3 text-lg font-bold text-[color:var(--on-surface)]">
                   {product.name}
                 </h3>
 
-                <p className="mt-2 text-sm font-semibold text-blue-600">
+                <p className="mt-2 text-sm font-semibold text-[color:var(--primary)]">
                   ${product.price}
                 </p>
 
                 {/* Size Picker */}
                 <div className="mt-4">
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">
+                  <span className="text-[10px] font-bold text-[color:var(--on-surface-variant)] uppercase tracking-widest block mb-2">
                     Size (EU)
                   </span>
                   <div className="flex flex-wrap gap-1">
@@ -156,8 +156,8 @@ export default function CategorySection() {
                         onClick={() => handleSizeSelect(product.id, size)}
                         className={`w-8 h-8 text-[11px] font-bold transition-all border flex items-center justify-center cursor-pointer ${
                           selectedSizes[product.id] === size
-                            ? 'bg-blue-600 text-white border-blue-600'
-                            : 'border-gray-200 text-gray-700 bg-white hover:border-gray-400'
+                            ? 'bg-[color:var(--primary)] text-white border-[color:var(--primary)]'
+                            : 'border-[color:var(--outline-variant)] text-[color:var(--on-surface-variant)] bg-[color:var(--surface)] hover:border-[color:var(--outline)]'
                         }`}
                       >
                         {size}

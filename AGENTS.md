@@ -1,6 +1,6 @@
 
 <!-- BEGIN:nextjs-agent-rules -->
-1. respond with just emoji
+<!-- 1. respond with just emoji -->
 
 # This is NOT the Next.js you know
 

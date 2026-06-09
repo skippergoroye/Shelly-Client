@@ -3,7 +3,7 @@ import Sidebar from "./_components/Sidebar";
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen bg-[color:var(--layout-bg)] overflow-hidden font-sans">
+    <div className="flex h-screen bg-[color:var(--background)] overflow-hidden font-sans">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
         <Navbar />

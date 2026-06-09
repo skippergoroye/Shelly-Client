@@ -158,7 +158,7 @@ export function RecentTransactions() {
       columns={columns}
       data={INITIAL_ORDERS}
       searchPlaceholder="Search orders..."
-      pageSize={4}
+      pageSize={2}
       totalCount={1284}
       emptyMessage="No matching orders found."
     />

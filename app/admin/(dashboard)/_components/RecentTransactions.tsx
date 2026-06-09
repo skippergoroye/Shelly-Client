@@ -138,7 +138,7 @@ const columns: ColumnDef<Order, any>[] = [
     id: "actions",
     header: "Action",
     cell: () => (
-      <div className="text-right">
+      <div className="">
         <SubmitButton
           type="button"
           className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-50 rounded cursor-pointer bg-transparent border-0 shadow-none h-auto"

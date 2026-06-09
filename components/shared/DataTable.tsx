@@ -106,7 +106,7 @@ function DataTable<TData>({
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="h-11 px-6 text-[11px] font-bold text-description uppercase tracking-wide whitespace-nowrap"
+                    className="h-11 px-6 text-[12px] font-bold text-description capitalize tracking-wide white"
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>

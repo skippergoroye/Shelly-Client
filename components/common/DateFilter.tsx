@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { Button } from "../ui/button";
+// import { Button } from "./Button";
 
 export interface DateRange {
   startDate: string | null;
@@ -116,6 +117,7 @@ const DateFilter: React.FC<DateFilterProps> = ({ value, onFilterChange }) => {
             <Button
               type="button"
               variant="outline"
+              size="lg"
               onClick={handleClear}
               className="w-fit!"
             >

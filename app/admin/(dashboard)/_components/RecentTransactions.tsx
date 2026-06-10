@@ -152,6 +152,14 @@ const columns: ColumnDef<Order, any>[] = [
 
 // ── Component ──────────────────────────────────────────
 export function RecentTransactions() {
+  const handleFilters = (values: FilterValues) => {
+    // values looks like: { status: "Shipped", date: "2024-10-25" }
+    // plug into your query params, API call, or local filter here
+    console.log("Applied filters:", values);
+  };
+
+
+  
   return (
     <DataTable<Order>
       title="Recent Orders"
@@ -161,6 +169,30 @@ export function RecentTransactions() {
       pageSize={2}
       totalCount={1284}
       emptyMessage="No matching orders found."
+      filterFields={[
+        {
+          key: "status",
+          label: "Status",
+          type: "select",
+          options: [
+            { label: "Shipped", value: "Shipped" },
+            { label: "Processing", value: "Processing" },
+            { label: "Pending", value: "Pending" },
+          ],
+        },
+        {
+          key: "date",
+          label: "Date",
+          type: "date",
+        },
+        {
+          key: "customer",
+          label: "Customer Name",
+          type: "text",
+          placeholder: "e.g. Julian",
+        },
+      ]}
+      onApplyFilters={handleFilters}
     />
   );
 }

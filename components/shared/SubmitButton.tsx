@@ -27,7 +27,7 @@ const SubmitButton = ({
     <Button
       type={type}
       disabled={isLoading || loading || disabled}
-      className={cn("cursor-pointer", className)}
+      className={cn("cursor-pointer text-white", className)}
       onClick={clickFn}
       {...props}
     >

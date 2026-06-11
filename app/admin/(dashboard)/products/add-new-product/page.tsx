@@ -134,10 +134,10 @@ export default function AddProductPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-light-grey bg-card p-6 space-y-5">
+          <div className="rounded-xl border border-primary bg-input-background p-6 space-y-5">
             <h3 className="text-sm font-semibold text-foreground">Product Images</h3>
             <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-light-grey rounded-lg cursor-pointer bg-dark-grey/30 hover:bg-dark-grey/50 transition-colors">
+              <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-primary rounded-lg cursor-pointer bg-input-background hover:bg-dark-grey/50 transition-colors">
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   <ImagePlus className="w-8 h-8 text-description mb-2" />
                   <p className="text-sm text-description">

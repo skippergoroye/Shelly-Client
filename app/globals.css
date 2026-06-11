@@ -17,8 +17,8 @@
   --description: #5f738c;
   --dark-grey: #f3f5f6;
 
+  
   --radius: 0.625rem;
-
   --surface: var(--background);
   --on-primary: #ffffff;
   --on-surface: var(--foreground);
@@ -81,17 +81,13 @@
 
 @layer base {
   body {
-    @apply bg-[color:var(--background)] text-[color:var(--foreground)];
+    @apply bg-background text-foreground;
   }
 }
 
 @layer utilities {
-  /* .hero-gradient {
-    background: linear-gradient(135deg, rgba(250, 248, 255, 1) 0%, rgba(218, 226, 255, 0.4) 100%);
-  } */
-
   .container-max {
-    @apply max-w-[1280px] mx-auto;
+    @apply max-w-7xl mx-auto;
   }
 
   .text-h1 {

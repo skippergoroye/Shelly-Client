@@ -15,3 +15,30 @@ export function parseNameAndSize(title: string): { baseName: string; size: strin
   }
   return { baseName: title, size: null };
 }
+
+
+
+
+// ── Page number builder with ellipsis ─────────────────
+export function getPageNumbers(current: number, total: number): (number | "...")[] {
+  if (total <= 6) return Array.from({ length: total }, (_, i) => i);
+  const pages: (number | "...")[] = [0];
+  if (current > 2) pages.push("...");
+  const start = Math.max(1, current - 1);
+  const end = Math.min(total - 2, current + 1);
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (current < total - 3) pages.push("...");
+  pages.push(total - 1);
+  return pages;
+}
+
+
+
+
+
+// ── Status badge styles ────────────────────────────────
+export const STATUS_STYLES: Record<Order["status"], string> = {
+  Shipped: "bg-green-50 text-green-700 border border-green-200/50",
+  Processing: "bg-blue-50 text-blue-700 border border-blue-200/50",
+  Pending: "bg-orange-50/70 text-orange-700 border border-orange-200/50",
+};

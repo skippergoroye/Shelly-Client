@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTable, { FilterField, FilterValues } from "@/components/shared/DataTable";
 import { DateRange } from "@/components/common/DateFilter";
 import SubmitButton from "@/components/shared/SubmitButton";
+import { STATUS_STYLES } from "@/lib/utils";
 
 // ── Types ──────────────────────────────────────────────
 interface Order {
@@ -55,12 +56,7 @@ const INITIAL_ORDERS: Order[] = [
   },
 ];
 
-// ── Status badge styles ────────────────────────────────
-const STATUS_STYLES: Record<Order["status"], string> = {
-  Shipped: "bg-green-50 text-green-700 border border-green-200/50",
-  Processing: "bg-blue-50 text-blue-700 border border-blue-200/50",
-  Pending: "bg-orange-50/70 text-orange-700 border border-orange-200/50",
-};
+
 
 // ── Filter fields ─────────────────────────────────────
 const FILTER_FIELDS: FilterField[] = [

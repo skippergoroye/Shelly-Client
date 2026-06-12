@@ -15,6 +15,7 @@ import { Search, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-rea
 import SubmitButton from "@/components/shared/SubmitButton";
 import { FilterSheet } from "@/components/common/FilterSheet";
 import { DateRange } from "@/components/common/DateFilter";
+import { getPageNumbers } from "@/lib/utils";
 
 const EMPTY_RANGE: DateRange = { startDate: null, endDate: null };
 
@@ -49,18 +50,7 @@ export interface DataTableProps<TData> {
   onApplyFilters?: (values: FilterValues, dateRange: DateRange) => void;
 }
 
-// ── Page number builder with ellipsis ─────────────────
-function getPageNumbers(current: number, total: number): (number | "...")[] {
-  if (total <= 6) return Array.from({ length: total }, (_, i) => i);
-  const pages: (number | "...")[] = [0];
-  if (current > 2) pages.push("...");
-  const start = Math.max(1, current - 1);
-  const end = Math.min(total - 2, current + 1);
-  for (let i = start; i <= end; i++) pages.push(i);
-  if (current < total - 3) pages.push("...");
-  pages.push(total - 1);
-  return pages;
-}
+
 
 
 

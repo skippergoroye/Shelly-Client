@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { MoreVertical } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
-import DataTable from "@/components/shared/DataTable";
+import DataTable, { FilterField, FilterValues } from "@/components/shared/DataTable";
+import { DateRange } from "@/components/common/DateFilter";
 import SubmitButton from "@/components/shared/SubmitButton";
 
 // ── Types ──────────────────────────────────────────────
@@ -60,6 +61,22 @@ const STATUS_STYLES: Record<Order["status"], string> = {
   Processing: "bg-blue-50 text-blue-700 border border-blue-200/50",
   Pending: "bg-orange-50/70 text-orange-700 border border-orange-200/50",
 };
+
+// ── Filter fields ─────────────────────────────────────
+const FILTER_FIELDS: FilterField[] = [
+  {
+    key: "status",
+    label: "Status",
+    type: "select",
+    options: [
+      { label: "Shipped", value: "Shipped" },
+      { label: "Processing", value: "Processing" },
+      { label: "Pending", value: "Pending" },
+    ],
+  },
+  { key: "customerName", label: "Customer", type: "text", placeholder: "e.g. Julian" },
+  { key: "address", label: "Address", type: "text", placeholder: "e.g. Baker St" },
+];
 
 // ── Column definitions ────────────────────────────────
 const columns: ColumnDef<Order, any>[] = [
@@ -152,14 +169,10 @@ const columns: ColumnDef<Order, any>[] = [
 
 // ── Component ──────────────────────────────────────────
 export function RecentTransactions() {
-  const handleFilters = (values: FilterValues) => {
-    // values looks like: { status: "Shipped", date: "2024-10-25" }
-    // plug into your query params, API call, or local filter here
-    console.log("Applied filters:", values);
+  const handleFilters = (values: FilterValues, dateRange: DateRange) => {
+    console.log("Applied filters:", values, dateRange);
   };
 
-
-  
   return (
     <DataTable<Order>
       title="Recent Orders"
@@ -169,29 +182,9 @@ export function RecentTransactions() {
       pageSize={2}
       totalCount={1284}
       emptyMessage="No matching orders found."
-      filterFields={[
-        {
-          key: "status",
-          label: "Status",
-          type: "select",
-          options: [
-            { label: "Shipped", value: "Shipped" },
-            { label: "Processing", value: "Processing" },
-            { label: "Pending", value: "Pending" },
-          ],
-        },
-        {
-          key: "date",
-          label: "Date",
-          type: "date",
-        },
-        {
-          key: "customer",
-          label: "Customer Name",
-          type: "text",
-          placeholder: "e.g. Julian",
-        },
-      ]}
+      hasDateFilter
+      dateFilterLabel="Order Date"
+      filterFields={FILTER_FIELDS}
       onApplyFilters={handleFilters}
     />
   );

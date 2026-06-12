@@ -14,9 +14,11 @@ import { Card } from "@/components/ui/card";
 import { Search, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import SubmitButton from "@/components/shared/SubmitButton";
 import { FilterSheet } from "@/components/common/FilterSheet";
+import { DateRange } from "@/components/common/DateFilter";
 
+const EMPTY_RANGE: DateRange = { startDate: null, endDate: null };
 
-export type FilterFieldType = "text" | "select" | "date";
+export type FilterFieldType = "text" | "select";
 
 export interface FilterField {
   key: string;
@@ -42,7 +44,9 @@ export interface DataTableProps<TData> {
   footerAction?: React.ReactNode;
   className?: string;
   filterFields?: FilterField[];
-  onApplyFilters?: (values: FilterValues) => void;
+  hasDateFilter?: boolean;
+  dateFilterLabel?: string;
+  onApplyFilters?: (values: FilterValues, dateRange: DateRange) => void;
 }
 
 // ── Page number builder with ellipsis ─────────────────
@@ -58,16 +62,7 @@ function getPageNumbers(current: number, total: number): (number | "...")[] {
   return pages;
 }
 
-// ── Filter Sheet ───────────────────────────────────────
-interface FilterSheetProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  fields: FilterField[];
-  values: FilterValues;
-  onChange: (key: string, value: string) => void;
-  onApply: () => void;
-  onReset: () => void;
-}
+
 
 
 
@@ -85,34 +80,73 @@ function DataTable<TData>({
   footerAction,
   className,
   filterFields,
+  hasDateFilter = false,
+  dateFilterLabel = "Date Range",
   onApplyFilters,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [filterValues, setFilterValues] = useState<FilterValues>({});
   const [appliedValues, setAppliedValues] = useState<FilterValues>({});
+  const [dateRange, setDateRange] = useState<DateRange>(EMPTY_RANGE);
+  const [appliedDateRange, setAppliedDateRange] = useState<DateRange>(EMPTY_RANGE);
 
-  const handleFilterChange = (key: string, value: string) => {
-    setFilterValues((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleApply = () => {
-    setAppliedValues(filterValues);
-    onApplyFilters?.(filterValues);
+  const handleApply = (values: FilterValues) => {
+    setAppliedValues(values);
+    setAppliedDateRange(dateRange);
+    onApplyFilters?.(values, dateRange);
     setFilterOpen(false);
   };
 
   const handleReset = () => {
-    setFilterValues({});
     setAppliedValues({});
-    onApplyFilters?.({});
+    setDateRange(EMPTY_RANGE);
+    setAppliedDateRange(EMPTY_RANGE);
+    onApplyFilters?.({}, EMPTY_RANGE);
     setFilterOpen(false);
   };
 
-  const activeFilterCount = Object.values(appliedValues).filter(Boolean).length;
+  const hasFilters = (filterFields && filterFields.length > 0) || hasDateFilter;
+  const activeFilterCount =
+    Object.values(appliedValues).filter(Boolean).length +
+    (appliedDateRange.startDate ? 1 : 0);
+
+  const filteredData = useMemo(() => {
+    let result = data;
+
+    const hasActiveFieldFilters = Object.values(appliedValues).some(Boolean);
+    if (hasActiveFieldFilters) {
+      result = result.filter((row) => {
+        const record = row as Record<string, unknown>;
+        return Object.entries(appliedValues).every(([key, value]) => {
+          if (!value) return true;
+          const field = filterFields?.find((f) => f.key === key);
+          const cell = String(record[key] ?? "").toLowerCase();
+          return field?.type === "select"
+            ? cell === value.toLowerCase()
+            : cell.includes(value.toLowerCase());
+        });
+      });
+    }
+
+    if (appliedDateRange.startDate && appliedDateRange.endDate) {
+      const start = new Date(appliedDateRange.startDate).getTime();
+      const end = new Date(appliedDateRange.endDate).getTime();
+      result = result.filter((row) => {
+        const record = row as Record<string, unknown>;
+        const dateValue = Object.values(record).find((v) => {
+          if (typeof v !== "string") return false;
+          const t = new Date(v).getTime();
+          return !isNaN(t) && t >= start && t <= end;
+        });
+        return !!dateValue;
+      });
+    }
+
+    return result;
+  }, [data, appliedValues, appliedDateRange, filterFields]);
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: { globalFilter },
     onGlobalFilterChange: setGlobalFilter,
@@ -142,7 +176,7 @@ function DataTable<TData>({
           <div className="flex items-center gap-2 w-full sm:w-auto">
             {searchable && (
               <div className="relative w-full sm:w-60">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-[15px] h-[15px] text-description pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.75 h-3.75 text-description pointer-events-none" />
                 <input
                   type="text"
                   placeholder={searchPlaceholder}
@@ -153,8 +187,8 @@ function DataTable<TData>({
               </div>
             )}
 
-            {/* Filter button — only renders if filterFields is provided */}
-            {filterFields && filterFields.length > 0 && (
+            {/* Filter button — renders if filter fields or a date filter exist */}
+            {hasFilters && (
               <SubmitButton
                 type="button"
                 clickFn={() => setFilterOpen(true)}
@@ -288,15 +322,18 @@ function DataTable<TData>({
       </Card>
 
       {/* ── Filter Sheet (outside Card to avoid overflow clipping) ── */}
-      {filterFields && filterFields.length > 0 && (
+      {hasFilters && (
         <FilterSheet
           open={filterOpen}
           onOpenChange={setFilterOpen}
-          fields={filterFields}
-          values={filterValues}
-          onChange={handleFilterChange}
+          fields={filterFields ?? []}
           onApply={handleApply}
           onReset={handleReset}
+          hasDateFilter={hasDateFilter}
+          dateFilterLabel={dateFilterLabel}
+          dateRange={dateRange}
+          onDateChange={setDateRange}
+          activeFilterCount={activeFilterCount}
         />
       )}
     </>

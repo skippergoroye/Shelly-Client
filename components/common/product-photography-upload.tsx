@@ -56,10 +56,7 @@ export function ProductPhotography() {
   return (
     <div className="m bg-gray-50 p-8">
       <div className="w-full rounded-2xl">
-        {/* Title */}
         <h1 className="mb-6 text-3xl font-bold text-gray-900">Product Photography</h1>
-
-        {/* Main Upload Area */}
         <div
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop('main', e)}
@@ -70,7 +67,7 @@ export function ProductPhotography() {
           <p className="mt-1 text-sm text-gray-400">recommended: 2000 × 2000px PNG</p>
         </div>
 
-        {/* Image Grid */}
+
         <div className="grid grid-cols-4 gap-4">
           {images.map((image, index) => (
             <div key={image.id} className="relative">

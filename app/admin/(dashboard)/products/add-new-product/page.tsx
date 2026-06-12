@@ -5,7 +5,7 @@ import { useForm, FormProvider as Form, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Plus, X, Palette } from "lucide-react";
+import { ArrowLeft, Plus, X} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import CustomFormField, { FormFieldType } from "@/components/shared/CustomFormField";
@@ -42,11 +42,6 @@ export default function AddProductPage() {
   const [heroImage, setHeroImage] = useState<string | null>(null);
   const [subImages, setSubImages] = useState<(string | null)[]>(["/img/shoe-one.png", null, null]);
 
-  // Color picker Ref & State
-  const colorPickerRef = useRef<HTMLInputElement>(null);
-  const [customColors, setCustomColors] = useState<string[]>([]);
-  const [isAddingMaterial, setIsAddingMaterial] = useState(false);
-  const [newMaterialColor, setNewMaterialColor] = useState("#2563EB");
 
   // Custom Sizing States
   const [customSizes, setCustomSizes] = useState<string[]>([]);
@@ -71,15 +66,11 @@ export default function AddProductPage() {
     },
   });
 
-  const { fields: materialFields, append: appendMaterial, remove: removeMaterial } = useFieldArray({
-    control: form.control,
-    name: "materials",
-  });
 
 
 
   const selectedSizes = form.watch("sizes") || [];
-  const selectedColors = form.watch("colors") || [];
+
 
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);

@@ -1,17 +1,11 @@
 import { Calendar } from "lucide-react";
 import SubmitButton from "@/components/shared/SubmitButton";
+import { PageHeader } from "@/components/common/PageHeader";
 
 export function DashboardHeader() {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Dashboard Overview
-        </h1>
-        <p className="text-md text-gray-400 font-medium mt-0.5">
-          Real-time artisan metrics and shop performance.
-        </p>
-      </div>
+      <PageHeader title="Dashboard Overview" description="Real-time artisan metrics and shop performance." />
       <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
         <SubmitButton
           type="button"

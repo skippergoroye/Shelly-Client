@@ -224,7 +224,7 @@ function DataTable<TData>({
                     }`}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="h-[60px] px-6 py-0 text-sm">
+                      <TableCell key={cell.id} className="h-15 px-6 py-0 text-sm">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}

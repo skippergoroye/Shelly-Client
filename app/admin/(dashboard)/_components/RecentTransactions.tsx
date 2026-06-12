@@ -9,7 +9,7 @@ import SubmitButton from "@/components/shared/SubmitButton";
 import { STATUS_STYLES } from "@/lib/utils";
 
 // ── Types ──────────────────────────────────────────────
-interface Order {
+export interface Order {
   id: string;
   customerInit?: string;
   customerName: string;

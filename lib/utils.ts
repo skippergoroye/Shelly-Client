@@ -1,3 +1,4 @@
+import { Order } from "@/app/admin/(dashboard)/_components/RecentTransactions";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 

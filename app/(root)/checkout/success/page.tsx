@@ -8,7 +8,7 @@ import LoadingBar from "@/components/shared/LoadingBar";
 const OrderSuccessContent = dynamic(() => import("./_components/order-success-content"), {
   ssr: false,
   loading: () => (
-    <div className="min-h-[60vh] flex flex-col justify-center items-center bg-[color:var(--background)]">
+    <div className="min-h-[60vh] flex flex-col justify-center items-center bg-background">
       <LoadingBar loadingText="Loading your order..." />
     </div>
   ),
@@ -16,7 +16,7 @@ const OrderSuccessContent = dynamic(() => import("./_components/order-success-co
 
 export default function OrderSuccessPage() {
   return (
-    <div className="bg-[color:var(--background)] min-h-screen flex flex-col justify-between">
+    <div className="bg-background min-h-screen flex flex-col justify-between">
       <div>
         <Navbar />
         <OrderSuccessContent />

@@ -124,7 +124,7 @@ const CartPage = () => {
       <div className="container-max px-6 md:px-12">
         <div className=" py-12">
           <div className="flex items-center justify-between mb-12">
-            <h1 className="lg:text-4xl font-bold text-[color:var(--on-surface)]">
+            <h1 className="lg:text-4xl font-bold text-(--on-surface)">
               Your Shopping Cart
             </h1>
 
@@ -165,7 +165,7 @@ const CartPage = () => {
                 ))
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-[color:var(--on-surface-variant)] text-lg">Your cart is empty</p>
+                  <p className="text-(--on-surface-variant) text-lg">Your cart is empty</p>
                 </div>
               )}
 

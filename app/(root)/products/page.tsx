@@ -42,15 +42,15 @@ const Products = () => {
 
  
   return (
-    <div className="flex flex-col min-h-screen bg-[color:var(--background)]">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-12">
-          <h1 className="text-5xl font-bold text-[color:var(--on-surface)] tracking-tight mb-4 font-sans">
+          <h1 className="text-5xl font-bold text-(--on-surface) tracking-tight mb-4 font-sans">
             The Bespoke Series
           </h1>
-          <p className="text-[color:var(--on-surface-variant)] text-[17px] max-w-2xl leading-relaxed">
+          <p className="text-(--on-surface-variant) text-[17px] max-w-2xl leading-relaxed">
             A curated selection of technical footwear, blending ancestral construction with
             modern high-energy aesthetics. Each pair is finished by hand in our London
             atelier.

@@ -8,13 +8,13 @@ export const apiSlice = createApi({
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
     prepareHeaders: (headers, {getState}) => {
 
-      // const token = (getState() as RootState).auth?.token;
-      //  console.log("User token", token)
+      const token = (getState() as RootState).auth?.token;
+       console.log("User token", token)
 
       // Set the Authorization header if token exists
-      // if (token) {
-      //   headers.set("Authorization", `Bearer ${token}`);
-      // }
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
 
       return headers;
     },

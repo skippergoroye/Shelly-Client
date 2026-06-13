@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
       
         <div className="hidden md:block h-6" />
 
-        <div className="w-full max-w-[600px] flex flex-col items-stretch my-auto">
+        <div className="w-full max-w-150 flex flex-col items-stretch my-auto">
        
           <div className="flex flex-col items-center text-center ">
             <CompanyName />

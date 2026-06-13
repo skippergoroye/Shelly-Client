@@ -67,7 +67,7 @@ export const FilterSheet = ({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-152 flex-col p-0 gap-0 bg-white">
+      <SheetContent className="w-full sm:max-w-152 flex-col p-0 gap-0 bg-white border  border-white">
         {/* Header */}
         <SheetHeader className="px-6 py-4 border-b border-light-grey">
           <div className="flex items-center gap-2">

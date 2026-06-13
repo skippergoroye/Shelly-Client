@@ -53,23 +53,23 @@ export default function CategorySection() {
   if (isLoading) return <RouteLoadingScreen />
 
   return (
-    <div className="w-full bg-[color:var(--background)] px-6 py-12">
-      <section className="container-max px-6 md:px-12 w-full bg-[color:var(--background)] px-6 py-12">
+    <div className="w-full bg-background px-6 py-12">
+      <section className="container-max px-6 md:px-12 w-full bg-background py-12">
         <div className="mx-auto max-w-7xl">
           {/* Header */}
           <div className="mb-10 flex items-center justify-between">
             <div>
-              <p className="text-xs font-bold tracking-widest text-[color:var(--on-surface-variant)]">
+              <p className="text-xs font-bold tracking-widest text-(--on-surface-variant)">
                 CURATED EDITIONS
               </p>
-              <h1 className="mt-2 text-4xl font-bold text-[color:var(--primary)]">
+              <h1 className="mt-2 text-4xl font-bold text-primary">
                 The Seasonal Collection
               </h1>
             </div>
 
             <Link
               href="/products"
-              className="text-sm font-semibold text-xl text-[color:var(--primary)] underline"
+              className="text-sm font-semibold text-primary underline"
             >
               View All
             </Link>
@@ -85,7 +85,7 @@ export default function CategorySection() {
               return (
                 <div
                   key={product._id}
-                  className="overflow-hidden border border-[color:var(--outline-variant)] bg-[color:var(--surface)]"
+                  className="overflow-hidden border border-(--outline-variant) bg-[color:var(--surface)]"
                 >
                   {/* Product Image */}
                   <Link href={`/products/${product._id}`}>

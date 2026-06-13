@@ -3,11 +3,8 @@ export interface Product {
   name: string;
   category: string;
   price: number;
-  originalPrice?: number;
   images: string;
-  rating: number;
-  badge?: "NEW" | "SALE";
-  badgeColor?: "bg-blue-600" | "bg-orange-600";
+  sizes: string[];
 }
 
 export interface ProductGridProps {

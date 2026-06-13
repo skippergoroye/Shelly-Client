@@ -41,7 +41,7 @@ export function OrderMetricsCards() {
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
       <OrderMetricCard
         title="Pending Value"
-        value="$14,280.00"
+        value="₦14,280.00"
         icon={<ClipboardList className="w-5 h-5" />}
         iconContainerClassName="bg-gray-100 text-gray-500"
         footer={

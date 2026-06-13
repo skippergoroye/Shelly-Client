@@ -74,14 +74,14 @@ export default function OrderOverviewPage() {
             `Order Date: ${order.orderDate}`,
             `Est. Delivery: ${order.estimatedDelivery}`,
             `Items: ${order.items}`,
-            `Total: $${order.total.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+            `Total: ₦${order.total.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
           ].join("\n")}
           fields={[
             { label: "Order ID",      value: order.id },
             { label: "Order Date",    value: order.orderDate },
             { label: "Est. Delivery", value: order.estimatedDelivery },
             { label: "Items",         value: order.items },
-            { label: "Total",         value: `$${order.total.toLocaleString("en-US", { minimumFractionDigits: 2 })}` },
+            { label: "Total",         value: `₦${order.total.toLocaleString("en-US", { minimumFractionDigits: 2 })}` },
           ]}
         />
 

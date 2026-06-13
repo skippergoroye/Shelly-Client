@@ -148,7 +148,7 @@ const columns: ColumnDef<Transaction, any>[] = [
     header: "Amount",
     cell: ({ getValue }) => (
       <span className="text-xs font-semibold text-gray-800">
-        ${getValue<number>().toLocaleString("en-US", { minimumFractionDigits: 2 })}
+        ₦{getValue<number>().toLocaleString("en-US", { minimumFractionDigits: 2 })}
       </span>
     ),
   },

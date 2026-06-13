@@ -135,9 +135,9 @@ export default function EditProductPage() {
                       fieldType={FormFieldType.INPUT}
                       control={form.control}
                       name="price"
-                      label="PRICE (USD)"
+                      label="PRICE (NGN)"
                       placeholder="1250"
-                      leftIcon={<span className="text-description font-medium">$</span>}
+                      leftIcon={<span className="text-description font-medium">₦</span>}
                       variant="h-12 w-full"
                     />
                     <div className="flex flex-col gap-1">

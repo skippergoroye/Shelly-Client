@@ -1,12 +1,11 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import SubmitButton from "@/components/shared/SubmitButton";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/features/cart/cartSlice";
-import { useState } from "react";
-import Link from "next/link";
+import SubmitButton from "@/components/shared/SubmitButton";
 import ToastNotification from "@/components/shared/ToastNotification";
 
 interface ProductCardProps {
@@ -14,32 +13,18 @@ interface ProductCardProps {
   name: string;
   category: string;
   price: number;
-  originalPrice?: number;
   images: string;
-  rating: number;
-  badge?: "NEW" | "SALE";
-  badgeColor?: "bg-blue-600" | "bg-orange-600";
+  sizes: string[];
 }
 
-export function ProductCard({
-  id,
-  name,
-  category,
-  price,
-  originalPrice,
-  images,
-  rating,
-  badge,
-  badgeColor = "bg-blue-600",
-}: ProductCardProps) {
+export function ProductCard({ id, name, category, price, images, sizes }: ProductCardProps) {
   const dispatch = useDispatch();
   const [isAdding, setIsAdding] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<number>(40);
+  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] ?? "40");
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = () => {
     try {
       setIsAdding(true);
-
       dispatch(
         addToCart({
           id: `${id}-${selectedSize}`,
@@ -48,25 +33,18 @@ export function ProductCard({
           quantity: 1,
           images,
           category,
-          rating,
-        }),
+          rating: 0,
+        })
       );
-
       ToastNotification({
         title: `${name} (EU ${selectedSize}) added!`,
         description: "Item has been added to your cart.",
         type: "success",
       });
-    } catch (error) {
-      ToastNotification({
-        title: "Error",
-        description: "Failed to add item to cart.",
-        type: "error",
-      });
+    } catch {
+      ToastNotification({ title: "Error", description: "Failed to add item to cart.", type: "error" });
     } finally {
-      setTimeout(() => {
-        setIsAdding(false);
-      }, 1000);
+      setTimeout(() => setIsAdding(false), 1000);
     }
   };
 
@@ -89,48 +67,25 @@ export function ProductCard({
                 <span className="text-gray-400 text-xs">No image</span>
               </div>
             )}
-
-            {badge && (
-              <Badge
-                className={`absolute top-3 left-3 ${badgeColor} text-white uppercase text-[10px] font-bold px-2 py-0.5`}
-              >
-                {badge}
-              </Badge>
-            )}
           </div>
 
           <div className="p-5 flex flex-col">
-            <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">
-              {category}
-            </p>
-
-            <h3 className="mt-3 text-lg font-bold text-gray-900 leading-tight">
-              {name}
-            </h3>
-
-            <div className="mt-2 flex items-baseline space-x-2">
-              {originalPrice && (
-                <span className="text-xs text-gray-500 line-through">
-                  £{Math.round(originalPrice).toLocaleString()}
-                </span>
-              )}
-
-              <span className="text-sm font-semibold text-blue-600">
-                £{Math.round(price).toLocaleString()}
-              </span>
-            </div>
+            <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">{category}</p>
+            <h3 className="mt-3 text-lg font-bold text-gray-900 leading-tight">{name}</h3>
+            <span className="mt-2 text-sm font-semibold text-blue-600">
+              ₦{Math.round(price).toLocaleString()}
+            </span>
           </div>
         </div>
       </Link>
 
       <div className="px-5 pb-5 flex flex-col gap-4">
-        {/* Size Selection */}
         <div>
           <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">
             Size (EU)
           </span>
           <div className="flex flex-wrap gap-1">
-            {Array.from({ length: 9 }, (_, i) => 38 + i).map((size) => (
+            {sizes.map((size) => (
               <button
                 key={size}
                 type="button"
@@ -151,7 +106,7 @@ export function ProductCard({
           type="button"
           clickFn={handleAddToCart}
           isLoading={isAdding}
-          className="w-full px-4 py-5.5 bg-[color:var(--primary)] text-sm font-semibold text-white transition-colors duration-200"
+          className="w-full px-4 py-5.5 bg-primary text-sm font-semibold text-white transition-colors duration-200"
         >
           {isAdding ? "Added to Cart" : "Add to Cart"}
         </SubmitButton>

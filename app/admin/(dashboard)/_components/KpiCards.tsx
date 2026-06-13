@@ -16,7 +16,7 @@ const DEFAULT_ITEMS: MetricsCardProps[] = [
   },
   {
     title: "Revenue",
-    value: "$42,600",
+    value: "₦42,600",
     badgeText: "+8.2%",
     badgeClassName: "bg-blue-50 text-blue-600",
     icon: <CreditCard className="w-5 h-5" />,

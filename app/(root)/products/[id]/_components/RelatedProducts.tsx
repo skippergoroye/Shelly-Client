@@ -64,7 +64,7 @@ export function RelatedProducts({ productId }: { productId: string }) {
               </button>
             </div>
             <h3 className="font-semibold text-gray-900 text-sm">{product.name}</h3>
-            <p className="text-gray-600 text-sm mt-1">${product.price.toFixed(2)}</p>
+            <p className="text-gray-600 text-sm mt-1">₦{product.price.toFixed(2)}</p>
           </div>
         ))}
       </div>

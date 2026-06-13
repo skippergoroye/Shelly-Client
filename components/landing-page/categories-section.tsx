@@ -1,78 +1,41 @@
 'use client'
 
 import { useState } from 'react'
-import Image, { StaticImageData } from 'next/image'
 import SubmitButton from '@/components/shared/SubmitButton'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '@/redux/features/cart/cartSlice'
 import ToastNotification from '@/components/shared/ToastNotification'
-
-import ImgOne from '../../public/img/shoe-one.png'
-import ImgTwo from '../../public/img/shoe-two.png'
-import ImgThree from '../../public/img/shoe-three.png'
-import ImgFour from '../../public/img/shoe-four.png'
-
-interface Product {
-  id: string
-  brand: string
-  name: string
-  price: number
-  image: StaticImageData
-}
-
-const products: Product[] = [
-  {
-    id: '1',
-    brand: 'OXFORD',
-    name: 'The Cobalt Archer',
-    price: 1250,
-    image: ImgOne,
-  },
-  {
-    id: '2',
-    brand: 'CHELSEA',
-    name: 'Midnight Stealth',
-    price: 1400,
-    image: ImgTwo,
-  },
-  {
-    id: '3',
-    brand: 'SNEAKER',
-    name: 'Aero-Kinetic Low',
-    price: 890,
-    image: ImgThree,
-  },
-  {
-    id: '4',
-    brand: 'BROGUE',
-    name: 'Heritage Wingtip',
-    price: 1150,
-    image: ImgFour,
-  },
-]
+import { useGetProductsQuery } from '@/redux/features/cart/cartApi'
+import Link from 'next/link'
+import RouteLoadingScreen from '@/components/shared/RouteLoadingScreen'
 
 export default function CategorySection() {
   const dispatch = useDispatch()
   const [addedToCart, setAddedToCart] = useState<string | null>(null)
-  const [selectedSizes, setSelectedSizes] = useState<Record<string, number>>(
-    Object.fromEntries(products.map((p) => [p.id, 40]))
-  )
+  const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({})
 
-  const handleSizeSelect = (productId: string, size: number) => {
+  const { data: rawProducts = [], isLoading } = useGetProductsQuery()
+  const products = rawProducts.slice(0, 4)
+
+  const getSizeForProduct = (productId: string, defaultSize: string) =>
+    selectedSizes[productId] ?? defaultSize
+
+  const handleSizeSelect = (productId: string, size: string) => {
     setSelectedSizes((prev) => ({ ...prev, [productId]: size }))
   }
 
-  const handleAddToCart = (product: Product) => {
-    const size = selectedSizes[product.id]
+  const handleAddToCart = (product: typeof products[number]) => {
+    const sizes = product.sizes.map(String)
+    const size = getSizeForProduct(product._id, sizes[0] ?? '40')
 
     dispatch(
       addToCart({
-        id: `home-${product.id}-${size}`,
+        id: `home-${product._id}-${size}`,
         name: `${product.name} (EU ${size})`,
         price: product.price,
         quantity: 1,
-        images: '',
-        category: product.brand,
+        images: product.images[0] ?? '',
+        category: product.category,
         rating: 0,
       })
     )
@@ -83,104 +46,115 @@ export default function CategorySection() {
       type: 'success',
     })
 
-    setAddedToCart(product.id)
+    setAddedToCart(product._id)
     setTimeout(() => setAddedToCart(null), 2000)
   }
 
+  if (isLoading) return <RouteLoadingScreen />
+
   return (
     <div className="w-full bg-[color:var(--background)] px-6 py-12">
-    <section className="container-max px-6 md:px-12 w-full bg-[color:var(--background)] px-6 py-12">
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="mb-10 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold tracking-widest text-[color:var(--on-surface-variant)]">
-              CURATED EDITIONS
-            </p>
-            <h1 className="mt-2 text-4xl font-bold text-[color:var(--primary)]">
-              The Seasonal Collection
-            </h1>
+      <section className="container-max px-6 md:px-12 w-full bg-[color:var(--background)] px-6 py-12">
+        <div className="mx-auto max-w-7xl">
+          {/* Header */}
+          <div className="mb-10 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-bold tracking-widest text-[color:var(--on-surface-variant)]">
+                CURATED EDITIONS
+              </p>
+              <h1 className="mt-2 text-4xl font-bold text-[color:var(--primary)]">
+                The Seasonal Collection
+              </h1>
+            </div>
+
+            <Link
+              href="/products"
+              className="text-sm font-semibold text-xl text-[color:var(--primary)] underline"
+            >
+              View All
+            </Link>
           </div>
 
-          <a
-            href="#"
-            className="text-sm font-semibold text-xl text-[color:var(--primary)] underline"
-          >
-            View All
-          </a>
-        </div>
+          {/* Product Grid */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((product) => {
+              const sizes = product.sizes.map(String)
+              const selectedSize = getSizeForProduct(product._id, sizes[0] ?? '40')
+              const image = product.images[0]
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="overflow-hidden border border-[color:var(--outline-variant)] bg-[color:var(--surface)]"
-            >
-              {/* Product Image */}
-              <div className="aspect-square overflow-hidden bg-[color:var(--surface)]">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  className="h-full w-full object-cover p-2"
-                  width={500}
-                  height={500}
-                  priority={product.id === '1'}
-                />
-              </div>
+              return (
+                <div
+                  key={product._id}
+                  className="overflow-hidden border border-[color:var(--outline-variant)] bg-[color:var(--surface)]"
+                >
+                  {/* Product Image */}
+                  <Link href={`/products/${product._id}`}>
+                    <div className="aspect-square overflow-hidden bg-[color:var(--surface)]">
+                      {image ? (
+                        <img
+                          src={image}
+                          alt={product.name}
+                          className="h-full w-full object-cover p-2"
+                        />
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center bg-gray-100">
+                          <span className="text-gray-400 text-xs">No image</span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
 
-              {/* Product Info */}
-              <div className="flex flex-col p-5">
-                <p className="text-xs font-bold tracking-wider text-[color:var(--on-surface-variant)]">
-                  {product.brand}
-                </p>
+                  {/* Product Info */}
+                  <div className="flex flex-col p-5">
+                    <p className="text-xs font-bold tracking-wider text-[color:var(--on-surface-variant)]">
+                      {product.category.toUpperCase()}
+                    </p>
 
-                <h3 className="mt-3 text-lg font-bold text-[color:var(--on-surface)]">
-                  {product.name}
-                </h3>
+                    <h3 className="mt-3 text-lg font-bold text-[color:var(--on-surface)]">
+                      {product.name}
+                    </h3>
 
-                <p className="mt-2 text-sm font-semibold text-[color:var(--primary)]">
-                  ${product.price}
-                </p>
+                    <p className="mt-2 text-sm font-semibold text-[color:var(--primary)]">
+                      ₦{product.price.toLocaleString()}
+                    </p>
 
-                {/* Size Picker */}
-                <div className="mt-4">
-                  <span className="text-[10px] font-bold text-[color:var(--on-surface-variant)] uppercase tracking-widest block mb-2">
-                    Size (EU)
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {Array.from({ length: 9 }, (_, i) => 38 + i).map((size) => (
-                      <button
-                        key={size}
-                        type="button"
-                        onClick={() => handleSizeSelect(product.id, size)}
-                        className={`w-8 h-8 text-[11px] font-bold transition-all border flex items-center justify-center cursor-pointer ${
-                          selectedSizes[product.id] === size
-                            ? 'bg-[color:var(--primary)] text-white border-[color:var(--primary)]'
-                            : 'border-[color:var(--outline-variant)] text-[color:var(--on-surface-variant)] bg-[color:var(--surface)] hover:border-[color:var(--outline)]'
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                    {/* Size Picker */}
+                    <div className="mt-4">
+                      <span className="text-[10px] font-bold text-[color:var(--on-surface-variant)] uppercase tracking-widest block mb-2">
+                        Size (EU)
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {sizes.map((size) => (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => handleSizeSelect(product._id, size)}
+                            className={`w-8 h-8 text-[11px] font-bold transition-all border flex items-center justify-center cursor-pointer ${
+                              selectedSize === size
+                                ? 'bg-[color:var(--primary)] text-white border-[color:var(--primary)]'
+                                : 'border-[color:var(--outline-variant)] text-[color:var(--on-surface-variant)] bg-[color:var(--surface)] hover:border-[color:var(--outline)]'
+                            }`}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <SubmitButton
+                      type="button"
+                      clickFn={() => handleAddToCart(product)}
+                      className="mt-4 w-full px-4 py-5.5 bg-[color:var(--primary)] text-sm font-semibold text-white transition-colors duration-200"
+                    >
+                      {addedToCart === product._id ? 'Added to Cart' : 'Add to Cart'}
+                    </SubmitButton>
                   </div>
                 </div>
-
-                <SubmitButton
-                  type="button"
-                  clickFn={() => handleAddToCart(product)}
-                  className="mt-4 w-full px-4 py-5.5 bg-[color:var(--primary)] text-sm font-semibold text-white transition-colors duration-200"
-                >
-                  {addedToCart === product.id
-                    ? 'Added to Cart'
-                    : 'Add to Cart'}
-                </SubmitButton>
-              </div>
-            </div>
-          ))}
+              )
+            })}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </div>
   )
 }

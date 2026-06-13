@@ -43,7 +43,7 @@ export default function AddProductPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Left Column */}
+            
             <div className="lg:col-span-7 flex flex-col gap-8">
               <ImageUploader
                 heroImage={heroImage}
@@ -89,7 +89,6 @@ export default function AddProductPage() {
                       name="price"
                       label="PRICE (NGN)"
                       placeholder="1250"
-
                       variant="h-12 w-full"
                     />
                     <CustomFormField

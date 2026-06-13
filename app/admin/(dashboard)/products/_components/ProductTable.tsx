@@ -107,7 +107,7 @@ const ProductTable = () => {
       header: "Price",
       cell: ({ getValue }) => (
         <span className="text-xs font-bold text-[#0066FF]">
-          ${getValue<number>().toLocaleString("en-US", { minimumFractionDigits: 2 })}
+          ₦{getValue<number>().toLocaleString("en-US", { minimumFractionDigits: 2 })}
         </span>
       ),
     },

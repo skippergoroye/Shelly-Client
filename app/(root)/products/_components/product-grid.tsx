@@ -27,7 +27,7 @@ export function ProductGrid({
   return (
     <div className="flex-1">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <p className="text-[color:var(--on-surface-variant)] text-sm">
+        <p className="text-(--on-surface-variant) text-sm">
           Showing {startIndex}–{endIndex} of {totalProducts} products
         </p>
 
@@ -39,7 +39,7 @@ export function ProductGrid({
               name="search"
               placeholder="Search products..."
               variant="h-[40px] w-full bg-[color:var(--surface)]"
-              leftIcon={<Search size={16} className="text-[color:var(--primary)]" />}
+              leftIcon={<Search size={16} className="text-primary" />}
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
@@ -53,7 +53,7 @@ export function ProductGrid({
           ))
         ) : (
           <div className="col-span-full text-center py-8">
-            <p className="text-[color:var(--on-surface-variant)]">No products found</p>
+            <p className="text-(--on-surface-variant)">No products found</p>
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Eye } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
@@ -131,6 +132,13 @@ interface OrdersTableProps {
 }
 
 const OrdersTable = ({ statusFilter }: OrdersTableProps) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 1000);
+  };
+
   const handleFilters = (values: FilterValues, dateRange: DateRange) => {
     console.log("Applied filters:", values, dateRange);
   };
@@ -152,6 +160,8 @@ const OrdersTable = ({ statusFilter }: OrdersTableProps) => {
       dateFilterLabel="Order Date"
       filterFields={FILTER_FIELDS}
       onApplyFilters={handleFilters}
+      onRefresh={handleRefresh}
+      isRefreshing={isRefreshing}
     />
   );
 };

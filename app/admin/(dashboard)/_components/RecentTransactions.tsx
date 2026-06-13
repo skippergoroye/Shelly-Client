@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { MoreVertical } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
@@ -165,6 +166,13 @@ const columns: ColumnDef<Order, any>[] = [
 
 // ── Component ──────────────────────────────────────────
 export function RecentTransactions() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 1000);
+  };
+
   const handleFilters = (values: FilterValues, dateRange: DateRange) => {
     console.log("Applied filters:", values, dateRange);
   };
@@ -182,6 +190,8 @@ export function RecentTransactions() {
       dateFilterLabel="Order Date"
       filterFields={FILTER_FIELDS}
       onApplyFilters={handleFilters}
+      onRefresh={handleRefresh}
+      isRefreshing={isRefreshing}
     />
   );
 }

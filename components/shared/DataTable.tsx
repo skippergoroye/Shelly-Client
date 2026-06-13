@@ -11,7 +11,7 @@ import {
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Search, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, SlidersHorizontal, RotateCcw } from "lucide-react";
 import SubmitButton from "@/components/shared/SubmitButton";
 import { FilterSheet } from "@/components/common/FilterSheet";
 import { DateRange } from "@/components/common/DateFilter";
@@ -48,6 +48,8 @@ export interface DataTableProps<TData> {
   hasDateFilter?: boolean;
   dateFilterLabel?: string;
   onApplyFilters?: (values: FilterValues, dateRange: DateRange) => void;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }
 
 
@@ -73,6 +75,8 @@ function DataTable<TData>({
   hasDateFilter = false,
   dateFilterLabel = "Date Range",
   onApplyFilters,
+  onRefresh,
+  isRefreshing = false,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -156,10 +160,19 @@ function DataTable<TData>({
   return (
     <>
       <Card className={`relative overflow-hidden p-0 rounded-xl shadow-sm ${className ?? ""}`}>
-        {/* ── Card Header ─────────────────────────────── */}
         <div className="px-6 py-2 mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-light-grey bg-background">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+            {onRefresh && (
+              <SubmitButton
+                type="button"
+                clickFn={onRefresh}
+                className="p-0 h-auto bg-transparent border-0 shadow-none text-primary hover:opacity-70 hover:bg-transparent transition-opacity"
+                aria-label="Reload data"
+              >
+                <RotateCcw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
+              </SubmitButton>
+            )}
             {headerAction}
           </div>
 
@@ -177,7 +190,7 @@ function DataTable<TData>({
               </div>
             )}
 
-            {/* Filter button — renders if filter fields or a date filter exist */}
+
             {hasFilters && (
               <SubmitButton
                 type="button"

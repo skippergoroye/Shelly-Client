@@ -42,6 +42,7 @@ const ProductTable = () => {
     page,
     setPage,
     setPageSize,
+    refetch,
   } = useProducts();
 
   const columns: ColumnDef<Product, any>[] = [
@@ -135,6 +136,8 @@ const ProductTable = () => {
   return (
     <DataTable<Product>
       title="Product Catalog"
+      onRefresh={refetch}
+      isRefreshing={isFetching}
       columns={columns}
       data={products}
       searchPlaceholder="Search products..."

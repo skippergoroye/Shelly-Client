@@ -1,131 +1,44 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useForm, FormProvider as Form } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
+import { FormProvider as Form } from "react-hook-form";
 import { Plus, X, ChevronRight, Loader } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
 import CustomFormField, { FormFieldType } from "@/components/shared/CustomFormField";
 import { SelectItem } from "@/components/ui/select";
 import SubmitButton from "@/components/shared/SubmitButton";
 import { cn } from "@/lib/utils";
 import ImageUploader from "@/components/common/ImageUploader";
-import { useGetProductByIdQuery, useUpdateProductMutation } from "@/redux/features/admin/products/adminProductApi";
-
-const formSchema = z.object({
-  name: z.string().min(1, "Product name is required"),
-  description: z.string().min(1, "Craft description is required"),
-  category: z.string().min(1, "Collection category is required"),
-  price: z.string().min(1, "Price is required"),
-  stock: z.string().min(1, "Stock unit is required"),
-  sizes: z.array(z.string()).min(1, "Select at least one size"),
-  tempCustomSize: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
-const LOW_STOCK_THRESHOLD = 5;
-const sizeOptions = ["38", "39", "40", "41", "42", "43", "44", "45"];
+import { useEditProduct } from "./_hooks/useEditProduct";
 
 export default function EditProductPage() {
-  const router = useRouter();
   const params = useParams();
   const productId = params.id as string;
 
-  const { data: product, isLoading: isFetching, isError } = useGetProductByIdQuery(productId);
-
-  const [updateProduct, { isLoading: isSubmitting }] = useUpdateProductMutation();
-
-  const [heroImage, setHeroImage] = useState<string | null>(null);
-  const [subImages, setSubImages] = useState<(string | null)[]>([null, null, null]);
-  const [heroFile, setHeroFile] = useState<File | null>(null);
-  const [subFiles, setSubFiles] = useState<(File | null)[]>([null, null, null]);
-  const [customSizes, setCustomSizes] = useState<string[]>([]);
-  const [showCustomSizeInput, setShowCustomSizeInput] = useState(false);
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      category: "",
-      price: "",
-      stock: "",
-      sizes: [],
-      tempCustomSize: "",
-    },
-  });
-
-  useEffect(() => {
-    if (!product) return;
-    form.reset({
-      name: product.name,
-      description: product.description,
-      category: product.category,
-      price: String(product.price),
-      stock: String(product.stock),
-      sizes: product.sizes.map(String),
-      tempCustomSize: "",
-    });
-    setHeroImage(product.images[0] ?? null);
-    setSubImages([
-      product.images[1] ?? null,
-      product.images[2] ?? null,
-      product.images[3] ?? null,
-    ]);
-  }, [product, form]);
-
-  const selectedSizes = form.watch("sizes") || [];
-  const stockValue = form.watch("stock");
-  const isLowStock = Number(stockValue) > 0 && Number(stockValue) <= LOW_STOCK_THRESHOLD;
-
-  const onSubmit = async (data: FormValues) => {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("price", data.price);
-    formData.append("stock", data.stock);
-    formData.append("category", data.category);
-    formData.append("sizes", JSON.stringify(data.sizes.map(Number)));
-
-    if (heroFile) formData.append("images", heroFile);
-    subFiles.forEach((file) => {
-      if (file) formData.append("images", file);
-    });
-
-    try {
-      await updateProduct({ id: productId, formData }).unwrap();
-      toast.success("Product updated successfully!");
-      router.push("/admin/products");
-    } catch {
-      toast.error("Failed to update product. Please try again.");
-    }
-  };
-
-  const allSizes = [...sizeOptions, ...customSizes];
-
-  const toggleSize = (size: string) => {
-    if (selectedSizes.includes(size)) {
-      form.setValue("sizes", selectedSizes.filter((s) => s !== size), { shouldValidate: true });
-    } else {
-      form.setValue("sizes", [...selectedSizes, size], { shouldValidate: true });
-    }
-  };
-
-  const tempCustomSizeValue = form.watch("tempCustomSize") || "";
-
-  const handleAddCustomSize = () => {
-    const val = tempCustomSizeValue.trim();
-    if (val && !sizeOptions.includes(val) && !customSizes.includes(val)) {
-      setCustomSizes((prev) => [...prev, val]);
-      form.setValue("sizes", [...selectedSizes, val], { shouldValidate: true });
-      form.setValue("tempCustomSize", "");
-      setShowCustomSizeInput(false);
-    }
-  };
+  const {
+    form,
+    product,
+    isFetching,
+    isError,
+    isSubmitting,
+    heroImage,
+    subImages,
+    selectedSizes,
+    allSizes,
+    sizeOptions,
+    customSizes,
+    showCustomSizeInput,
+    isLowStock,
+    setShowCustomSizeInput,
+    toggleSize,
+    handleAddCustomSize,
+    handleRemoveCustomSize,
+    handleHeroImageChange,
+    handleSubImagesChange,
+    handleSubFileChange,
+    onHeroFileChange,
+    onSubmit,
+  } = useEditProduct(productId);
 
   if (isFetching) {
     return (
@@ -151,7 +64,7 @@ export default function EditProductPage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-light-grey">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest text-description uppercase mb-1">
                 <Link href="/admin/products" className="hover:text-foreground transition-colors">
@@ -171,21 +84,11 @@ export default function EditProductPage() {
             <div className="lg:col-span-7 flex flex-col gap-8">
               <ImageUploader
                 heroImage={heroImage}
-                onHeroImageChange={(src) => {
-                  setHeroImage(src);
-                  if (!src) setHeroFile(null);
-                }}
-                onHeroFileChange={setHeroFile}
+                onHeroImageChange={handleHeroImageChange}
+                onHeroFileChange={onHeroFileChange}
                 subImages={subImages}
-                onSubImagesChange={(imgs) => {
-                  imgs.forEach((src, i) => {
-                    if (!src) setSubFiles((prev) => { const next = [...prev]; next[i] = null; return next; });
-                  });
-                  setSubImages(imgs);
-                }}
-                onSubFileChange={(index, file) => {
-                  setSubFiles((prev) => { const next = [...prev]; next[index] = file; return next; });
-                }}
+                onSubImagesChange={handleSubImagesChange}
+                onSubFileChange={handleSubFileChange}
               />
 
               <div className="bg-white dark:bg-card border border-light-grey rounded-2xl p-6 shadow-sm flex flex-col gap-6">
@@ -213,15 +116,11 @@ export default function EditProductPage() {
 
             {/* Right Column */}
             <div className="lg:col-span-5 flex flex-col gap-8">
-              {/* Commercials */}
+             
               <div className="bg-white dark:bg-card border border-light-grey rounded-2xl overflow-hidden shadow-sm">
                 <div className="w-full h-48 bg-gray-100 dark:bg-dark-grey overflow-hidden">
                   {product.images[0] ? (
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-description text-sm">
                       No image
@@ -232,17 +131,15 @@ export default function EditProductPage() {
                 <div className="p-6 flex flex-col gap-5">
                   <h2 className="text-xl font-bold text-foreground tracking-tight">Commercials</h2>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1">
-                      <CustomFormField
-                        fieldType={FormFieldType.INPUT}
-                        control={form.control}
-                        name="price"
-                        label="PRICE (NGN)"
-                        placeholder="1250"
-                        leftIcon={<span className="text-description font-medium">$</span>}
-                        variant="h-12 w-full"
-                      />
-                    </div>
+                    <CustomFormField
+                      fieldType={FormFieldType.INPUT}
+                      control={form.control}
+                      name="price"
+                      label="PRICE (USD)"
+                      placeholder="1250"
+                      leftIcon={<span className="text-description font-medium">$</span>}
+                      variant="h-12 w-full"
+                    />
                     <div className="flex flex-col gap-1">
                       <CustomFormField
                         fieldType={FormFieldType.INPUT}
@@ -307,8 +204,7 @@ export default function EditProductPage() {
                             type="button"
                             clickFn={(e) => {
                               e.stopPropagation();
-                              setCustomSizes(customSizes.filter((s) => s !== size));
-                              form.setValue("sizes", selectedSizes.filter((s) => s !== size));
+                              handleRemoveCustomSize(size);
                             }}
                             className="absolute -top-1.5 -right-1.5 w-4 h-4 p-0 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-none border-0"
                           >

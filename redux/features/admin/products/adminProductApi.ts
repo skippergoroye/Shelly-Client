@@ -35,6 +35,12 @@ export const adminProductApi = apiSlice.injectEndpoints({
         body: formData,
       }),
     }),
+    deleteProduct: builder.mutation<{ message: string }, string>({
+      query: (id) => ({
+        url: `/admin/products/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -43,4 +49,5 @@ export const {
   useGetProductByIdQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
 } = adminProductApi;

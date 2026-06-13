@@ -1,7 +1,19 @@
 import { useState, useCallback, useMemo } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useGetProductsQuery } from "@/redux/features/admin/products/adminProductApi";
-import { Product } from "../_data/products";
+
+export interface Product {
+  id: string;
+  sku: string;
+  name: string;
+  image?: string;
+  category: string;
+  price: number;
+  stock: number;
+  stockStatus: "In Stock" | "Low Stock" | "Out of Stock";
+  description?: string;
+  sizes?: string[];
+}
 
 function deriveStockStatus(stock: number): Product["stockStatus"] {
   if (stock === 0) return "Out of Stock";

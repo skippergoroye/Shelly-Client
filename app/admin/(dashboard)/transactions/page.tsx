@@ -4,7 +4,7 @@ import SubmitButton from "@/components/shared/SubmitButton";
 import { PageHeader } from "@/components/common/PageHeader";
 import TransactionsTable from "./_components/TransactionsTable";
 import { FinancialLedgerCards } from "./_components/Financial-ledger-Cards";
-// import FinancialLedgerCards from "./_components/Financial-Ledger-Cards";
+
 
 const Transactions = () => {
   return (

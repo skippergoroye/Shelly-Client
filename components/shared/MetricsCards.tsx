@@ -19,7 +19,7 @@ export function MetricsCard({
   value,
 }: MetricsCardProps) {
   return (
-    <Card className="p-5 flex flex-col justify-between shadow-sm min-h-[125px] bg-white border border-gray-200/60 rounded-xl">
+    <Card className="p-5 flex flex-col justify-between shadow-sm min-h-31.25 bg-white border border-gray-200/60 rounded-xl">
       <div className="flex items-start justify-between">
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${iconContainerClassName}`}>
           {icon}

@@ -6,7 +6,8 @@ import Link from "next/link";
 import DataTable, { FilterField, FilterValues } from "@/components/shared/DataTable";
 import { DateRange } from "@/components/common/DateFilter";
 import SubmitButton from "@/components/shared/SubmitButton";
-import { Product, INITIAL_PRODUCTS } from "../_data/products";
+import { Product } from "../_data/products";
+import { useProducts } from "../_hooks/useProducts";
 
 // ── Stock status styles ────────────────────────────────
 const STOCK_STATUS_STYLES: Record<Product["stockStatus"], { dot: string; text: string }> = {
@@ -33,6 +34,16 @@ const FILTER_FIELDS: FilterField[] = [
 
 // ── Component ──────────────────────────────────────────
 const ProductTable = () => {
+  const {
+    products,
+    totalResults,
+    isFetching,
+    pageSize,
+    page,
+    setPage,
+    setPageSize,
+  } = useProducts();
+
   const columns: ColumnDef<Product, any>[] = [
     {
       accessorKey: "name",
@@ -125,11 +136,11 @@ const ProductTable = () => {
     <DataTable<Product>
       title="Product Catalog"
       columns={columns}
-      data={INITIAL_PRODUCTS}
+      data={products}
       searchPlaceholder="Search products..."
-      pageSize={2}
-      totalCount={INITIAL_PRODUCTS.length}
-      emptyMessage="No matching products found."
+      pageSize={pageSize}
+      totalCount={totalResults}
+      emptyMessage={isFetching ? "Loading products…" : "No matching products found."}
       filterFields={FILTER_FIELDS}
       onApplyFilters={handleFilters}
     />

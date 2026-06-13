@@ -1,177 +1,61 @@
 "use client";
 
-import { useState } from "react";
-import { useForm, FormProvider as Form } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useRouter } from "next/navigation";
+import { FormProvider as Form } from "react-hook-form";
 import { Plus, X } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
 import CustomFormField, { FormFieldType } from "@/components/shared/CustomFormField";
 import { SelectItem } from "@/components/ui/select";
 import SubmitButton from "@/components/shared/SubmitButton";
 import { cn } from "@/lib/utils";
 import ImageUploader from "@/components/common/ImageUploader";
-import { useCreateProductMutation } from "@/redux/features/admin/products/adminProductApi";
-
-const formSchema = z.object({
-  name: z.string().min(1, "Product name is required"),
-  description: z.string().min(1, "Craft description is required"),
-  category: z.string().min(1, "Collection category is required"),
-  price: z.string().min(1, "Price is required"),
-  stock: z.string().min(1, "Stock unit is required"),
-  sizes: z.array(z.string()).min(1, "Select at least one size"),
-  colors: z.array(z.string()).min(1, "Select at least one color"),
-  materials: z.array(
-    z.object({
-      name: z.string().min(1, "Material name is required"),
-      color: z.string(),
-    })
-  ).min(1, "At least one material is required"),
-  tempCustomSize: z.string().optional(),
-  tempMaterialName: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { useAddProduct } from "./_hooks/useAddProduct";
 
 export default function AddProductPage() {
-  const router = useRouter();
-  const [createProduct, { isLoading }] = useCreateProductMutation();
-
-  // Image preview state (data URLs for display)
-  const [heroImage, setHeroImage] = useState<string | null>(null);
-  const [subImages, setSubImages] = useState<(string | null)[]>([null, null, null]);
-
-  // Actual File objects for FormData submission
-  const [heroFile, setHeroFile] = useState<File | null>(null);
-  const [subFiles, setSubFiles] = useState<(File | null)[]>([null, null, null]);
-
-
-  // Custom Sizing States
-  const [customSizes, setCustomSizes] = useState<string[]>([]);
-  const [showCustomSizeInput, setShowCustomSizeInput] = useState(false);
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      category: "Bespoke Originals",
-      price: "1250",
-      stock: "12",
-      sizes: ["38", "40", "43", "44"],
-      colors: ["#1E293B"],
-      materials: [
-        { name: "French Calfskin", color: "#2563EB" },
-        { name: "suede Trim", color: "#94A3B8" },
-      ],
-      tempCustomSize: "",
-      tempMaterialName: "",
-    },
-  });
-
-
-
-
-  const selectedSizes = form.watch("sizes") || [];
-
-
-  const onSubmit = async (data: FormValues) => {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("price", data.price);
-    formData.append("stock", data.stock);
-    formData.append("category", data.category);
-    formData.append("sizes", JSON.stringify(data.sizes.map(Number)));
-
-    if (heroFile) formData.append("images", heroFile);
-    subFiles.forEach((file) => {
-      if (file) formData.append("images", file);
-    });
-
-    try {
-      await createProduct(formData).unwrap();
-      toast.success("Product successfully created!");
-      router.push("/admin/products");
-    } catch {
-      toast.error("Failed to create product. Please try again.");
-    }
-  };
-
-  // Size Grid Options
-  const sizeOptions = ["38", "39", "40", "41", "42", "43", "44", "45"];
-  const allSizes = [...sizeOptions, ...customSizes];
-
-  const toggleSize = (size: string) => {
-    if (selectedSizes.includes(size)) {
-      form.setValue(
-        "sizes",
-        selectedSizes.filter((s) => s !== size),
-        { shouldValidate: true }
-      );
-    } else {
-      form.setValue("sizes", [...selectedSizes, size], { shouldValidate: true });
-    }
-  };
-
-  const tempCustomSizeValue = form.watch("tempCustomSize") || "";
-
-  const handleAddCustomSize = () => {
-    const val = tempCustomSizeValue.trim();
-    if (val && !sizeOptions.includes(val) && !customSizes.includes(val)) {
-      setCustomSizes((prev) => [...prev, val]);
-      form.setValue("sizes", [...selectedSizes, val], { shouldValidate: true });
-      form.setValue("tempCustomSize", "");
-      setShowCustomSizeInput(false);
-    }
-  };
-
-
-
- 
+  const {
+    form,
+    isLoading,
+    heroImage,
+    subImages,
+    selectedSizes,
+    allSizes,
+    sizeOptions,
+    showCustomSizeInput,
+    setShowCustomSizeInput,
+    toggleSize,
+    handleAddCustomSize,
+    handleRemoveCustomSize,
+    handleHeroImageChange,
+    handleSubImagesChange,
+    handleSubFileChange,
+    onHeroFileChange,
+    onSubmit,
+  } = useAddProduct();
 
   return (
     <div className="w-full mx-auto font-sans">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-light-grey">
-            <div className="flex items-center gap-4">
-
-              <div>
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">Add New Product</h1>
-                <p className="text-sm text-description">Create and configure a new product in your catalog</p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">Add New Product</h1>
+              <p className="text-sm text-description">Create and configure a new product in your catalog</p>
             </div>
-          
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+            {/* Left Column */}
             <div className="lg:col-span-7 flex flex-col gap-8">
               <ImageUploader
                 heroImage={heroImage}
-                onHeroImageChange={(src) => {
-                  setHeroImage(src);
-                  if (!src) setHeroFile(null);
-                }}
-                onHeroFileChange={setHeroFile}
+                onHeroImageChange={handleHeroImageChange}
+                onHeroFileChange={onHeroFileChange}
                 subImages={subImages}
-                onSubImagesChange={(imgs) => {
-                  imgs.forEach((src, i) => {
-                    if (!src) setSubFiles((prev) => { const next = [...prev]; next[i] = null; return next; });
-                  });
-                  setSubImages(imgs);
-                }}
-                onSubFileChange={(index, file) => {
-                  setSubFiles((prev) => { const next = [...prev]; next[index] = file; return next; });
-                }}
+                onSubImagesChange={handleSubImagesChange}
+                onSubFileChange={handleSubFileChange}
               />
 
               <div className="bg-white dark:bg-card border border-light-grey rounded-2xl p-6 shadow-sm flex flex-col gap-6">
                 <h2 className="text-xl font-bold text-foreground tracking-tight">Identity & Narrative</h2>
-
                 <div className="space-y-5">
                   <CustomFormField
                     fieldType={FormFieldType.INPUT}
@@ -181,7 +65,6 @@ export default function AddProductPage() {
                     placeholder="e.g., The Heritage Derby No. 04"
                     variant="h-12 w-full"
                   />
-
                   <CustomFormField
                     fieldType={FormFieldType.TEXTAREA}
                     control={form.control}
@@ -209,7 +92,6 @@ export default function AddProductPage() {
                       leftIcon={<span className="text-description font-medium">$</span>}
                       variant="h-12 w-full"
                     />
-
                     <CustomFormField
                       fieldType={FormFieldType.INPUT}
                       control={form.control}
@@ -219,7 +101,6 @@ export default function AddProductPage() {
                       variant="h-12 w-full"
                     />
                   </div>
-
                   <CustomFormField
                     fieldType={FormFieldType.SELECT}
                     control={form.control}
@@ -237,7 +118,6 @@ export default function AddProductPage() {
                 </div>
               </div>
 
-            
               <div className="bg-white dark:bg-card border border-light-grey rounded-2xl p-6 shadow-sm flex flex-col gap-6">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold text-foreground tracking-tight">Sizing Matrix</h2>
@@ -263,14 +143,7 @@ export default function AddProductPage() {
                         {size}
                         {isCustom && (
                           <span
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setCustomSizes(customSizes.filter((s) => s !== size));
-                              form.setValue(
-                                "sizes",
-                                selectedSizes.filter((s) => s !== size),
-                              );
-                            }}
+                            onClick={(e) => { e.stopPropagation(); handleRemoveCustomSize(size); }}
                             className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-colors"
                           >
                             <X className="w-2.5 h-2.5" />
@@ -301,10 +174,7 @@ export default function AddProductPage() {
                     </SubmitButton>
                     <SubmitButton
                       type="button"
-                      clickFn={() => {
-                        form.setValue("tempCustomSize", "");
-                        setShowCustomSizeInput(false);
-                      }}
+                      clickFn={() => { form.setValue("tempCustomSize", ""); setShowCustomSizeInput(false); }}
                       className="px-3 h-10 bg-white dark:bg-background border border-light-grey text-foreground text-xs rounded-lg hover:bg-gray-50 shadow-none"
                     >
                       Cancel
@@ -321,28 +191,23 @@ export default function AddProductPage() {
                 )}
               </div>
 
-
-
-                <div className="flex items-center gap-3">
-              <Link href="/admin/products">
+              <div className="flex items-center gap-3">
+                <Link href="/admin/products">
+                  <SubmitButton
+                    type="button"
+                    className="h-11 px-5 text-sm font-semibold rounded-xl border border-light-grey bg-white dark:bg-dark-grey text-foreground hover:bg-inner-background transition-colors shadow-none cursor-pointer"
+                  >
+                    Cancel
+                  </SubmitButton>
+                </Link>
                 <SubmitButton
-                  type="button"
-                  className="h-11 px-5 text-sm font-semibold rounded-xl border border-light-grey bg-white dark:bg-dark-grey text-foreground hover:bg-inner-background transition-colors shadow-none cursor-pointer"
+                  isLoading={isLoading}
+                  loadingText="Saving..."
+                  className="h-11 px-6 text-sm font-semibold rounded-xl bg-primary hover:opacity-90 text-white transition-all shadow-none border-0 cursor-pointer"
                 >
-                  Cancel
+                  Save Product
                 </SubmitButton>
-              </Link>
-              <SubmitButton
-                isLoading={isLoading}
-                loadingText="Saving..."
-                className="h-11 px-6 text-sm font-semibold rounded-xl bg-primary hover:opacity-90 text-white transition-all shadow-none border-0 cursor-pointer"
-              >
-                Save Product
-              </SubmitButton>
-            </div>
-
-          
-
+              </div>
             </div>
           </div>
         </form>

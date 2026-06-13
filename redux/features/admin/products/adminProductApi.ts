@@ -1,6 +1,6 @@
 import { apiSlice } from "../../api/apiSlice";
 
-export interface CreateProductResponse {
+export interface ApiProduct {
   _id: string;
   name: string;
   description: string;
@@ -15,7 +15,10 @@ export interface CreateProductResponse {
 
 export const adminProductApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    createProduct: builder.mutation<CreateProductResponse, FormData>({
+    getProducts: builder.query<ApiProduct[], void>({
+      query: () => "/admin/products",
+    }),
+    createProduct: builder.mutation<ApiProduct, FormData>({
       query: (formData) => ({
         url: "/admin/products",
         method: "POST",
@@ -25,4 +28,4 @@ export const adminProductApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useCreateProductMutation } = adminProductApi;
+export const { useGetProductsQuery, useCreateProductMutation } = adminProductApi;

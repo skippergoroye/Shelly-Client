@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, FormProvider as Form } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter, useParams } from "next/navigation";
-import { Plus, X, ChevronRight } from "lucide-react";
+import { Plus, X, ChevronRight, Loader } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import CustomFormField, { FormFieldType } from "@/components/shared/CustomFormField";
@@ -13,7 +13,7 @@ import { SelectItem } from "@/components/ui/select";
 import SubmitButton from "@/components/shared/SubmitButton";
 import { cn } from "@/lib/utils";
 import ImageUploader from "@/components/common/ImageUploader";
-import { INITIAL_PRODUCTS } from "../_data/products";
+import { useGetProductByIdQuery, useUpdateProductMutation } from "@/redux/features/admin/products/adminProductApi";
 
 const formSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -28,47 +28,83 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const LOW_STOCK_THRESHOLD = 5;
+const sizeOptions = ["38", "39", "40", "41", "42", "43", "44", "45"];
 
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
   const productId = params.id as string;
 
-  const product = INITIAL_PRODUCTS.find((p) => p.id === productId);
+  const { data: product, isLoading: isFetching, isError } = useGetProductByIdQuery(productId);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [heroImage, setHeroImage] = useState<string | null>(product?.image ?? null);
-  const [subImages, setSubImages] = useState<(string | null)[]>([product?.image ?? null, null, null]);
+  const [updateProduct, { isLoading: isSubmitting }] = useUpdateProductMutation();
+
+  const [heroImage, setHeroImage] = useState<string | null>(null);
+  const [subImages, setSubImages] = useState<(string | null)[]>([null, null, null]);
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [subFiles, setSubFiles] = useState<(File | null)[]>([null, null, null]);
   const [customSizes, setCustomSizes] = useState<string[]>([]);
   const [showCustomSizeInput, setShowCustomSizeInput] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: product?.name ?? "",
-      description: product?.description ?? "",
-      category: product?.category ?? "",
-      price: product ? String(product.price) : "",
-      stock: product ? String(product.stock) : "",
-      sizes: product?.sizes ?? ["40", "43", "44"],
+      name: "",
+      description: "",
+      category: "",
+      price: "",
+      stock: "",
+      sizes: [],
       tempCustomSize: "",
     },
   });
+
+  useEffect(() => {
+    if (!product) return;
+    form.reset({
+      name: product.name,
+      description: product.description,
+      category: product.category,
+      price: String(product.price),
+      stock: String(product.stock),
+      sizes: product.sizes.map(String),
+      tempCustomSize: "",
+    });
+    setHeroImage(product.images[0] ?? null);
+    setSubImages([
+      product.images[1] ?? null,
+      product.images[2] ?? null,
+      product.images[3] ?? null,
+    ]);
+  }, [product, form]);
 
   const selectedSizes = form.watch("sizes") || [];
   const stockValue = form.watch("stock");
   const isLowStock = Number(stockValue) > 0 && Number(stockValue) <= LOW_STOCK_THRESHOLD;
 
   const onSubmit = async (data: FormValues) => {
-    setIsLoading(true);
-    console.log("Updating product:", { ...data, heroImage, subImages: subImages.filter(Boolean) });
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    toast.success("Product updated successfully!");
-    router.push("/admin/products");
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("stock", data.stock);
+    formData.append("category", data.category);
+    formData.append("sizes", JSON.stringify(data.sizes.map(Number)));
+
+    if (heroFile) formData.append("images", heroFile);
+    subFiles.forEach((file) => {
+      if (file) formData.append("images", file);
+    });
+
+    try {
+      await updateProduct({ id: productId, formData }).unwrap();
+      toast.success("Product updated successfully!");
+      router.push("/admin/products");
+    } catch {
+      toast.error("Failed to update product. Please try again.");
+    }
   };
 
-  const sizeOptions = ["38", "39", "40", "41", "42", "43", "44", "45"];
   const allSizes = [...sizeOptions, ...customSizes];
 
   const toggleSize = (size: string) => {
@@ -91,7 +127,15 @@ export default function EditProductPage() {
     }
   };
 
-  if (!product) {
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (isError || !product) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <p className="text-description">Product not found.</p>
@@ -120,8 +164,6 @@ export default function EditProductPage() {
                 Edit Product: {product.name}
               </h1>
             </div>
-
-          
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -129,9 +171,21 @@ export default function EditProductPage() {
             <div className="lg:col-span-7 flex flex-col gap-8">
               <ImageUploader
                 heroImage={heroImage}
-                onHeroImageChange={setHeroImage}
+                onHeroImageChange={(src) => {
+                  setHeroImage(src);
+                  if (!src) setHeroFile(null);
+                }}
+                onHeroFileChange={setHeroFile}
                 subImages={subImages}
-                onSubImagesChange={setSubImages}
+                onSubImagesChange={(imgs) => {
+                  imgs.forEach((src, i) => {
+                    if (!src) setSubFiles((prev) => { const next = [...prev]; next[i] = null; return next; });
+                  });
+                  setSubImages(imgs);
+                }}
+                onSubFileChange={(index, file) => {
+                  setSubFiles((prev) => { const next = [...prev]; next[index] = file; return next; });
+                }}
               />
 
               <div className="bg-white dark:bg-card border border-light-grey rounded-2xl p-6 shadow-sm flex flex-col gap-6">
@@ -162,9 +216,9 @@ export default function EditProductPage() {
               {/* Commercials */}
               <div className="bg-white dark:bg-card border border-light-grey rounded-2xl overflow-hidden shadow-sm">
                 <div className="w-full h-48 bg-gray-100 dark:bg-dark-grey overflow-hidden">
-                  {product.image ? (
+                  {product.images[0] ? (
                     <img
-                      src={product.image}
+                      src={product.images[0]}
                       alt={product.name}
                       className="w-full h-full object-cover"
                     />
@@ -182,6 +236,17 @@ export default function EditProductPage() {
                       <CustomFormField
                         fieldType={FormFieldType.INPUT}
                         control={form.control}
+                        name="price"
+                        label="PRICE (NGN)"
+                        placeholder="1250"
+                        leftIcon={<span className="text-description font-medium">$</span>}
+                        variant="h-12 w-full"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <CustomFormField
+                        fieldType={FormFieldType.INPUT}
+                        control={form.control}
                         name="stock"
                         label="STOCK UNIT"
                         placeholder="12"
@@ -191,25 +256,25 @@ export default function EditProductPage() {
                         <span className="text-[11px] font-semibold text-red-500">Low Stock Warning</span>
                       )}
                     </div>
-
-                    <CustomFormField
-                      fieldType={FormFieldType.SELECT}
-                      control={form.control}
-                      name="category"
-                      label="COLLECTION CATEGORY"
-                      placeholder="Select category"
-                      variant="h-12 w-full"
-                    >
-                      <SelectItem value="Bespoke Originals">Bespoke Originals</SelectItem>
-                      <SelectItem value="Heritage Classic">Heritage Classic</SelectItem>
-                      <SelectItem value="Modern Essential">Modern Essential</SelectItem>
-                      <SelectItem value="Limited Edition">Limited Edition</SelectItem>
-                      <SelectItem value="Evening Collection">Evening Collection</SelectItem>
-                      <SelectItem value="Bespoke Casual">Bespoke Casual</SelectItem>
-                      <SelectItem value="Artisanal Sport">Artisanal Sport</SelectItem>
-                      <SelectItem value="Traditional Craft">Traditional Craft</SelectItem>
-                    </CustomFormField>
                   </div>
+
+                  <CustomFormField
+                    fieldType={FormFieldType.SELECT}
+                    control={form.control}
+                    name="category"
+                    label="COLLECTION CATEGORY"
+                    placeholder="Select category"
+                    variant="h-12 w-full"
+                  >
+                    <SelectItem value="Bespoke Originals">Bespoke Originals</SelectItem>
+                    <SelectItem value="Heritage Classic">Heritage Classic</SelectItem>
+                    <SelectItem value="Modern Essential">Modern Essential</SelectItem>
+                    <SelectItem value="Limited Edition">Limited Edition</SelectItem>
+                    <SelectItem value="Evening Collection">Evening Collection</SelectItem>
+                    <SelectItem value="Bespoke Casual">Bespoke Casual</SelectItem>
+                    <SelectItem value="Artisanal Sport">Artisanal Sport</SelectItem>
+                    <SelectItem value="Traditional Craft">Traditional Craft</SelectItem>
+                  </CustomFormField>
                 </div>
               </div>
 
@@ -225,31 +290,32 @@ export default function EditProductPage() {
                     const isSelected = selectedSizes.includes(size);
                     const isCustom = !sizeOptions.includes(size);
                     return (
-                      <button
+                      <SubmitButton
                         key={size}
                         type="button"
-                        onClick={() => toggleSize(size)}
+                        clickFn={() => toggleSize(size)}
                         className={cn(
-                          "h-12 flex items-center justify-center font-bold rounded-lg text-sm border transition-all duration-150 cursor-pointer relative",
+                          "h-12 font-bold rounded-lg text-sm border transition-all duration-150 relative shadow-none",
                           isSelected
-                            ? "bg-primary text-white border-primary"
+                            ? "bg-primary text-white border-primary hover:opacity-90"
                             : "bg-white dark:bg-dark-grey border-light-grey text-foreground hover:bg-gray-50 dark:hover:bg-gray-800"
                         )}
                       >
                         {size}
                         {isCustom && (
-                          <span
-                            onClick={(e) => {
+                          <SubmitButton
+                            type="button"
+                            clickFn={(e) => {
                               e.stopPropagation();
                               setCustomSizes(customSizes.filter((s) => s !== size));
                               form.setValue("sizes", selectedSizes.filter((s) => s !== size));
                             }}
-                            className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-colors"
+                            className="absolute -top-1.5 -right-1.5 w-4 h-4 p-0 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-none border-0"
                           >
                             <X className="w-2.5 h-2.5" />
-                          </span>
+                          </SubmitButton>
                         )}
-                      </button>
+                      </SubmitButton>
                     );
                   })}
                 </div>
@@ -284,35 +350,33 @@ export default function EditProductPage() {
                     </SubmitButton>
                   </div>
                 ) : (
-                  <button
+                  <SubmitButton
                     type="button"
-                    onClick={() => setShowCustomSizeInput(true)}
-                    className="w-full py-3 flex items-center justify-center border border-dashed border-light-grey rounded-xl text-sm text-description hover:text-foreground hover:border-gray-400 transition-all cursor-pointer font-medium"
+                    clickFn={() => setShowCustomSizeInput(true)}
+                    className="w-full py-3 border border-dashed border-light-grey rounded-xl text-sm text-description hover:text-foreground hover:border-gray-400 transition-all font-medium bg-transparent shadow-none hover:bg-transparent"
                   >
                     <Plus className="h-4 w-4 mr-1.5" /> Add Custom Size
-                  </button>
+                  </SubmitButton>
                 )}
               </div>
 
-
-
-                <div className="flex flex-end items-end justify-end gap-3">
-              <Link href="/admin/products">
+              <div className="flex items-center justify-end gap-3">
+                <Link href="/admin/products">
+                  <SubmitButton
+                    type="button"
+                    className="h-11 px-5 text-sm font-semibold rounded-xl border border-light-grey bg-white dark:bg-dark-grey text-foreground hover:bg-inner-background transition-colors shadow-none cursor-pointer"
+                  >
+                    Cancel
+                  </SubmitButton>
+                </Link>
                 <SubmitButton
-                  type="button"
-                  className="h-11 px-5 text-sm font-semibold rounded-xl border border-light-grey bg-white dark:bg-dark-grey text-foreground hover:bg-inner-background transition-colors shadow-none cursor-pointer"
+                  isLoading={isSubmitting}
+                  loadingText="Updating..."
+                  className="h-11 px-6 text-sm font-semibold rounded-xl bg-primary hover:opacity-90 text-white transition-all shadow-none border-0 cursor-pointer"
                 >
-                  Cancel
+                  Update Product
                 </SubmitButton>
-              </Link>
-              <SubmitButton
-                isLoading={isLoading}
-                loadingText="Updating..."
-                className="h-11 px-6 text-sm font-semibold rounded-xl bg-primary hover:opacity-90 text-white transition-all shadow-none border-0 cursor-pointer"
-              >
-                Update Product
-              </SubmitButton>
-            </div>
+              </div>
             </div>
           </div>
         </form>

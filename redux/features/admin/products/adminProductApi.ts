@@ -18,6 +18,9 @@ export const adminProductApi = apiSlice.injectEndpoints({
     getProducts: builder.query<ApiProduct[], void>({
       query: () => "/admin/products",
     }),
+    getProductById: builder.query<ApiProduct, string>({
+      query: (id) => `/admin/products/${id}`,
+    }),
     createProduct: builder.mutation<ApiProduct, FormData>({
       query: (formData) => ({
         url: "/admin/products",
@@ -25,7 +28,19 @@ export const adminProductApi = apiSlice.injectEndpoints({
         body: formData,
       }),
     }),
+    updateProduct: builder.mutation<ApiProduct, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
+        url: `/admin/products/${id}`,
+        method: "PATCH",
+        body: formData,
+      }),
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useCreateProductMutation } = adminProductApi;
+export const {
+  useGetProductsQuery,
+  useGetProductByIdQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+} = adminProductApi;

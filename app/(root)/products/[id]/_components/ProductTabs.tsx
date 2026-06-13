@@ -4,83 +4,75 @@ import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { useGetProductByIdQuery } from '@/redux/features/cart/cartApi'
 
-const tabs = [
-  {
-    label: 'Material & Care',
-    content: (
-      <div className="space-y-3">
-        <div className="flex items-start gap-3">
-          <Check size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
-          <p className="text-gray-700">100% Grade A Mongolian Cashmere</p>
-        </div>
-        <div className="flex items-start gap-3">
-          <Check size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
-          <p className="text-gray-700">100% Pure Silk Lining</p>
-        </div>
-        <div className="flex items-start gap-3">
-          <Check size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
-          <p className="text-gray-700">Dry clean only</p>
-        </div>
-      </div>
-    ),
-  },
-  {
-    label: 'Fit & Measurements',
-    content: (
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-gray-600">Model is wearing:</p>
-            <p className="text-gray-900 font-semibold">Size S</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Model height:</p>
-            <p className="text-gray-900 font-semibold">6&apos;10" / 178cm</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Total Length:</p>
-            <p className="text-gray-900 font-semibold">45.5" / 115cm</p>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    label: 'Key Features',
-    content: (
-      <div className="space-y-3">
-        <p className="text-gray-700">
-          Features traditional notch lapels, structured shoulders, and deep welt pockets. The jacket
-          features a single vent for effortless movement and a refined drape.
-        </p>
-      </div>
-    ),
-  },
-]
-
-
 interface ProductTabsProps {
   productId: string
 }
 
 export function ProductTabs({ productId }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState(0)
-    const { data: product, isLoading, isError } = useGetProductByIdQuery(productId)
+  const { data: product, isLoading, isError } = useGetProductByIdQuery(productId)
 
-  if (isLoading) return (
-    <div className="border-t border-gray-200 pt-8 animate-pulse space-y-4">
-      <div className="h-8 w-40 bg-gray-200 rounded" />
-      <div className="flex gap-4">
-        {[...Array(3)].map((_, i) => <div key={i} className="h-10 w-32 bg-gray-200 rounded" />)}
+  if (isLoading) {
+    return (
+      <div className="border-t border-gray-200 pt-8 animate-pulse space-y-4">
+        <div className="h-8 w-40 bg-gray-200 rounded" />
+        <div className="flex gap-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-10 w-32 bg-gray-200 rounded" />
+          ))}
+        </div>
+        <div className="h-24 bg-gray-200 rounded" />
       </div>
-      <div className="h-24 bg-gray-200 rounded" />
-    </div>
-  )
+    )
+  }
 
   if (isError || !product) return null
 
+  const tabs = [
+    {
+      label: 'Description',
+      content: (
+        <p className="text-gray-700 leading-relaxed">{product.description}</p>
+      ),
+    },
+    {
+      label: 'Sizes Available',
+      content: (
+        <div className="flex flex-wrap gap-2">
+          {product.sizes.map((size) => (
+            <span
+              key={size}
+              className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700"
+            >
+              EU {size}
+            </span>
+          ))}
+        </div>
+      ),
+    },
+    {
+      label: 'Delivery & Returns',
+      content: (
+        <div className="space-y-3">
+          <div className="flex items-start gap-3">
+            <Check size={20} className="text-green-600 shrink-0 mt-0.5" />
+            <p className="text-gray-700">Free shipping on orders over ₦500</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <Check size={20} className="text-green-600 shrink-0 mt-0.5" />
+            <p className="text-gray-700">30-day hassle-free returns</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <Check size={20} className="text-green-600 shrink-0 mt-0.5" />
+            <p className="text-gray-700">1 year craftsmanship warranty</p>
+          </div>
+        </div>
+      ),
+    },
+  ]
+
   return (
-    <div className="border-t border-gray-200 pt-8">
+    <div className="border-t border-gray-200 pt-8 mt-12">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Product Details</h2>
 
       {/* Tab buttons */}

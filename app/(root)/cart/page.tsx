@@ -15,7 +15,8 @@ import {
   clearCart,
 } from "@/redux/features/cart/cartSlice";
 import CartItems from "./_components/cart-items";
-import LoadingBar from "@/components/shared/LoadingBar";
+import LoadingBar from "@/components/common/LoadingBar";
+
 
 interface SavedItemType {
   id: string;

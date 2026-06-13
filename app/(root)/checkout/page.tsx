@@ -3,7 +3,8 @@
 import dynamic from "next/dynamic";
 import Navbar from "@/components/landing-page/Navbar";
 import Footer from "@/components/landing-page/Footer";
-import LoadingBar from "@/components/shared/LoadingBar";
+import LoadingBar from "@/components/common/LoadingBar";
+
 
 const CheckoutForm = dynamic(() => import("./_components/checkout-form"), {
   ssr: false,

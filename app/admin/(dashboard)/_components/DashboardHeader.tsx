@@ -16,7 +16,7 @@ export function DashboardHeader() {
         </SubmitButton>
         <SubmitButton
           type="button"
-          className="flex items-center justify-center px-4 py-2 bg-[#0066FF] hover:bg-blue-600 active:bg-blue-700 text-xs font-bold text-white rounded-lg shadow-md shadow-blue-500/10 transition-all cursor-pointer h-auto border-0"
+          className="flex items-center justify-center px-4 py-2 bg-primary text-xs font-bold text-white rounded-lg shadow-md shadow-blue-500/10 transition-all cursor-pointer h-auto border-0"
         >
           Export Report
         </SubmitButton>

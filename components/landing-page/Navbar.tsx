@@ -22,7 +22,7 @@ const Navbar = ({ variant }: NavbarProps) => {
     setCartCount(count);
   }, [count]);
   return (
-    <header className={cn("bg-[color:var(--background)] border-b border-[color:var(--outline-variant)] shadow-sm sticky top-0 z-50", variant)}>
+    <header className={cn("bg-background border-b border-(--outline-variant) shadow-sm sticky top-0 z-50", variant)}>
       <div className="container-max px-6 md:px-12 h-20 flex justify-between items-center">
        
           <CompanyName />
@@ -37,51 +37,42 @@ const Navbar = ({ variant }: NavbarProps) => {
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="hover:bg-[color:var(--surface-container)]"
+              className="hover:bg-(--surface-container) cursor-pointer"
             >
               {theme === "light" ? (
-                <Moon size={20} className="text-[color:var(--on-surface-variant)]" />
+                <Moon size={20} className="text-(--on-surface-variant)" />
               ) : (
-                <Sun size={20} className="text-[color:var(--on-surface-variant)]" />
+                <Sun size={20} className="text-(--on-surface-variant)" />
               )}
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-[color:var(--surface-container)]"
-            >
-              <Heart
-                size={20}
-                className="text-[color:var(--on-surface-variant)]"
-              />
-            </Button>
-            <Link href="/cart">
+       
+            <Link href="/cart" className="cursor-pointer">
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:bg-[color:var(--surface-container)] relative"
+                className="hover:bg-(--surface-container) relative cursor-pointer"
               >
                 <ShoppingCart
                   size={20}
-                  className="text-[color:var(--on-surface-variant)]"
+                  className="text-(--on-surface-variant)"
                 />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 left-3 bg-[color:var(--primary)] text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                  <span className="absolute -top-1 left-3 bg-primary text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
                     {cartCount}
                   </span>
                 )}
               </Button>
             </Link>
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-[color:var(--surface-container)]"
+              className="hover:bg-(--surface-container) cursor-pointer"
             >
               <User
                 size={20}
-                className="text-[color:var(--on-surface-variant)]"
+                className="text-(--on-surface-variant)"
               />
-            </Button>
+            </Button> */}
           </div>
 
         

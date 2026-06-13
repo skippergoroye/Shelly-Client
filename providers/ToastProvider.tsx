@@ -14,7 +14,7 @@ const ToastProvider = () => {
         classNames: {
           toast: "flex items-center gap-3 w-full px-4 h-20 rounded-lg text-sm text-white shadow-lg",
           error: "bg-[#DC2626] border border-[#DC2626]",
-          success: "bg-[#0061F9] border border-[#0061F9]",
+          success: "bg-primary border border-primary",
           warning: "bg-yellow-500",
           info: "bg-blue-400",
           title: "font-semibold text-white",

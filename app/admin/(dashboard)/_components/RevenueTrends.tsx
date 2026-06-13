@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 
 export function RevenueTrends() {
   return (
-    <Card className="lg:col-span-2 p-5 flex flex-col justify-between shadow-sm min-h-[340px]">
+    <Card className="lg:col-span-2 p-5 flex flex-col justify-between shadow-sm min-h-85">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-sm font-bold text-gray-800">
           Revenue Performance
@@ -14,7 +14,7 @@ export function RevenueTrends() {
       </div>
 
       {/* SVG Custom Curved Chart */}
-      <div className="flex-1 w-full relative flex items-end min-h-[200px]">
+      <div className="flex-1 w-full relative flex items-end min-h-50">
         {/* Grid Line Marks */}
         <div className="absolute inset-x-0 top-1/4 border-b border-gray-100/60" />
         <div className="absolute inset-x-0 top-2/4 border-b border-gray-100/60" />

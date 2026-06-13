@@ -1,6 +1,15 @@
-// import { Product } from '@/app/shop/_components/product-grid';
-import { Product } from '@/app/products/_components/product-grid';
+import { Product } from '@/app/(root)/products/types';
 import { Truck, Shield, Headphones } from 'lucide-react';
+
+
+
+export const ROUTE_LABELS: Record<string, string> = {
+  "/admin": "Workspace Overview",
+  "/admin/orders": "Orders",
+  "/admin/products": "Products",
+  "/admin/products/add-new-product": "Add New Product",
+  "/admin/transactions": "Transactions",
+};
 
 export const categories = [
     {

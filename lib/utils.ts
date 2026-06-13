@@ -1,4 +1,5 @@
 import { Order } from "@/app/admin/(dashboard)/_components/RecentTransactions";
+import { ROUTE_LABELS } from "@/constants";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -43,3 +44,11 @@ export const STATUS_STYLES: Record<Order["status"], string> = {
   Processing: "bg-blue-50 text-blue-700 border border-blue-200/50",
   Pending: "bg-orange-50/70 text-orange-700 border border-orange-200/50",
 };
+
+
+
+export function getPageTitle(pathname: string): string {
+  if (ROUTE_LABELS[pathname]) return ROUTE_LABELS[pathname];
+  const segment = pathname.split("/").filter(Boolean).pop() ?? "";
+  return segment.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}

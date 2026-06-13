@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { name: "Products", href: "/admin/products", icon: Package },
   { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
   { name: "Transactions", href: "/admin/transactions", icon: CreditCard },
-  { name: "Delivery", href: "/admin/delivery", icon: Truck },
 ];
 
 export default function Sidebar() {

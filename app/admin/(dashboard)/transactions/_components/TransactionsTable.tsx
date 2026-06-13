@@ -70,8 +70,8 @@ const INITIAL_TRANSACTIONS: Transaction[] = [
 // ── Method icon map ────────────────────────────────────
 const METHOD_ICON: Record<Transaction["methodType"], React.ReactNode> = {
   card:   <CreditCard className="w-3.5 h-3.5 text-gray-400 shrink-0" />,
-  wire:   <Landmark   className="w-3.5 h-3.5 text-gray-400 shrink-0" />,
-  stripe: <Zap        className="w-3.5 h-3.5 text-gray-400 shrink-0" />,
+  wire:   <Landmark className="w-3.5 h-3.5 text-gray-400 shrink-0" />,
+  stripe: <Zap className="w-3.5 h-3.5 text-gray-400 shrink-0" />,
 };
 
 // ── Status styles ──────────────────────────────────────

@@ -49,6 +49,14 @@ export const STATUS_STYLES: Record<Order["status"], string> = {
 
 export function getPageTitle(pathname: string): string {
   if (ROUTE_LABELS[pathname]) return ROUTE_LABELS[pathname];
+
+  const dynamicMatch = Object.entries(ROUTE_LABELS)
+    .filter(([key]) => key.includes("["))
+    .sort(([a], [b]) => b.length - a.length)
+    .find(([key]) => new RegExp(`^${key.replace(/\[.*?\]/g, "[^/]+")}$`).test(pathname));
+
+  if (dynamicMatch) return dynamicMatch[1];
+
   const segment = pathname.split("/").filter(Boolean).pop() ?? "";
   return segment.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }

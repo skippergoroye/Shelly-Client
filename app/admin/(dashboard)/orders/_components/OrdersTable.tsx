@@ -1,84 +1,19 @@
 "use client";
-import { MoreVertical } from "lucide-react";
+
+import { Eye } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 import DataTable, { FilterField, FilterValues } from "@/components/shared/DataTable";
 import { DateRange } from "@/components/common/DateFilter";
-import SubmitButton from "@/components/shared/SubmitButton";
 import OrderStatusCell from "./OrderStatusCell";
-
-// ── Types ──────────────────────────────────────────────
-export interface Order {
-  id: string;
-  customerName: string;
-  customerAvatar?: string;
-  customerInit?: string;
-  customerInitBg?: string;
-  address: string;
-  items: string;
-  total: number;
-  paymentStatus: "PAID" | "AWAITING" | "FAILED";
-  orderStatus: "Processing" | "Pending" | "Shipped" | "Delivered";
-}
-
-// ── Sample data ────────────────────────────────────────
-const INITIAL_ORDERS: Order[] = [
-  {
-    id: "#HR-9021",
-    customerName: "Julian Draxler",
-    customerAvatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120&h=120",
-    customerInit: "JD",
-    address: "Savile Row, London, UK",
-    items: "1x Bespoke Oxford",
-    total: 1250.0,
-    paymentStatus: "PAID",
-    orderStatus: "Processing",
-  },
-  {
-    id: "#HR-9022",
-    customerName: "Sarah Miller",
-    customerInit: "SM",
-    customerInitBg: "bg-pink-100 text-pink-600",
-    address: "Fifth Ave, New York, NY",
-    items: "2x Calfskin Derby",
-    total: 2800.0,
-    paymentStatus: "AWAITING",
-    orderStatus: "Pending",
-  },
-  {
-    id: "#HR-9023",
-    customerName: "Robert Chen",
-    customerAvatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120&h=120",
-    customerInit: "RC",
-    address: "Nihonbashi, Tokyo, JP",
-    items: "1x Suede Loafer",
-    total: 950.0,
-    paymentStatus: "PAID",
-    orderStatus: "Shipped",
-  },
-  {
-    id: "#HR-9024",
-    customerName: "Elena Belova",
-    customerInit: "EB",
-    customerInitBg: "bg-blue-100 text-blue-600",
-    address: "Rue Saint-Honoré, Paris",
-    items: "1x Chelsea Boot",
-    total: 1400.0,
-    paymentStatus: "PAID",
-    orderStatus: "Delivered",
-  },
-];
+import { Order, INITIAL_ORDERS } from "../_data/orders";
 
 // ── Payment badge styles ───────────────────────────────
 const PAYMENT_STYLES: Record<Order["paymentStatus"], string> = {
-  PAID:    "bg-green-100 text-green-700",
+  PAID:     "bg-green-100 text-green-700",
   AWAITING: "bg-yellow-100 text-yellow-700",
-  FAILED:  "bg-red-100 text-red-600",
+  FAILED:   "bg-red-100 text-red-600",
 };
-
-
-
 
 // ── Filter fields ──────────────────────────────────────
 const FILTER_FIELDS: FilterField[] = [
@@ -98,9 +33,9 @@ const FILTER_FIELDS: FilterField[] = [
     label: "Payment",
     type: "select",
     options: [
-      { label: "Paid",     value: "PAID"    },
+      { label: "Paid",     value: "PAID"     },
       { label: "Awaiting", value: "AWAITING" },
-      { label: "Failed",   value: "FAILED"  },
+      { label: "Failed",   value: "FAILED"   },
     ],
   },
   { key: "customerName", label: "Customer", type: "text", placeholder: "e.g. Julian" },
@@ -141,11 +76,14 @@ const columns: ColumnDef<Order, any>[] = [
     },
   },
   {
-    accessorKey: "address",
+    accessorKey: "streetAddress",
     header: "Address",
-    cell: ({ getValue }) => (
-      <span className="text-xs text-gray-500 font-medium">{getValue<string>()}</span>
-    ),
+    cell: ({ row }) => {
+      const { streetAddress, city, state } = row.original;
+      return (
+        <span className="text-xs text-gray-500 font-medium">{`${streetAddress}, ${city}`}</span>
+      );
+    },
   },
   {
     accessorKey: "items",
@@ -154,15 +92,7 @@ const columns: ColumnDef<Order, any>[] = [
       <span className="text-xs text-gray-600 font-medium">{getValue<string>()}</span>
     ),
   },
-  {
-    accessorKey: "total",
-    header: "Total",
-    cell: ({ getValue }) => (
-      <span className="text-xs font-semibold text-gray-800">
-        ${getValue<number>().toLocaleString("en-US", { minimumFractionDigits: 2 })}
-      </span>
-    ),
-  },
+ 
   {
     accessorKey: "paymentStatus",
     header: "Payment",
@@ -184,14 +114,13 @@ const columns: ColumnDef<Order, any>[] = [
   },
   {
     id: "actions",
-    header: "",
-    cell: () => (
-      <SubmitButton
-        type="button"
-        className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-50 rounded cursor-pointer bg-transparent border-0 shadow-none h-auto"
-      >
-        <MoreVertical className="w-4 h-4" />
-      </SubmitButton>
+    header: "Actions",
+    cell: ({ row }) => (
+      <Link href={`/admin/orders/${row.original.uid}`}>
+        <span className="flex items-center justify-center text-gray-400 hover:text-blue-500 transition-colors p-1.5 hover:bg-blue-50 rounded cursor-pointer">
+          <Eye className="w-4 h-4" />
+        </span>
+      </Link>
     ),
   },
 ];

@@ -8,6 +8,8 @@ export const ROUTE_LABELS: Record<string, string> = {
   "/admin/orders": "Orders",
   "/admin/products": "Products",
   "/admin/products/add-new-product": "Add New Product",
+  "/admin/products/[id]": "Edit Product",
+  "/admin/orders/[id]": "Order Overview",
   "/admin/transactions": "Transactions",
 };
 

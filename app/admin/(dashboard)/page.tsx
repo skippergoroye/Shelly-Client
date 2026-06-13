@@ -6,7 +6,7 @@ import { RecentTransactions } from "./_components/RecentTransactions";
 
 export default function AdminDashboard() {
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-12">
+    <div className="space-y-8 mx-auto pb-12">
    
       <DashboardHeader />
 

@@ -9,6 +9,8 @@ interface ImageUploaderProps {
   onHeroImageChange: (src: string | null) => void;
   subImages: (string | null)[];
   onSubImagesChange: (images: (string | null)[]) => void;
+  onHeroFileChange?: (file: File | null) => void;
+  onSubFileChange?: (index: number, file: File | null) => void;
   className?: string;
 }
 
@@ -17,6 +19,8 @@ export default function ImageUploader({
   onHeroImageChange,
   subImages,
   onSubImagesChange,
+  onHeroFileChange,
+  onSubFileChange,
   className,
 }: ImageUploaderProps) {
   const heroInputRef = useRef<HTMLInputElement>(null);
@@ -35,6 +39,7 @@ export default function ImageUploader({
   const handleHeroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      onHeroFileChange?.(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         onHeroImageChange(reader.result as string);
@@ -46,6 +51,7 @@ export default function ImageUploader({
   const handleSubChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && activeSubSlot !== null) {
+      onSubFileChange?.(activeSubSlot, file);
       const reader = new FileReader();
       reader.onloadend = () => {
         const nextSub = [...subImages];
@@ -66,6 +72,7 @@ export default function ImageUploader({
     e.stopPropagation();
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith("image/")) {
+      onHeroFileChange?.(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         onHeroImageChange(reader.result as string);
@@ -79,6 +86,7 @@ export default function ImageUploader({
     e.stopPropagation();
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith("image/")) {
+      onSubFileChange?.(index, file);
       const reader = new FileReader();
       reader.onloadend = () => {
         const nextSub = [...subImages];

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { useForm, FormProvider as Form, useFieldArray } from "react-hook-form";
+import { useState } from "react";
+import { useForm, FormProvider as Form } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Plus, X} from "lucide-react";
+import { Plus, X } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import CustomFormField, { FormFieldType } from "@/components/shared/CustomFormField";
@@ -13,6 +13,7 @@ import { SelectItem } from "@/components/ui/select";
 import SubmitButton from "@/components/shared/SubmitButton";
 import { cn } from "@/lib/utils";
 import ImageUploader from "@/components/common/ImageUploader";
+import { useCreateProductMutation } from "@/redux/features/admin/products/adminProductApi";
 
 const formSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -36,11 +37,15 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function AddProductPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [createProduct, { isLoading }] = useCreateProductMutation();
 
-  // Reusable Image Uploader States
+  // Image preview state (data URLs for display)
   const [heroImage, setHeroImage] = useState<string | null>(null);
-  const [subImages, setSubImages] = useState<(string | null)[]>(["/img/shoe-one.png", null, null]);
+  const [subImages, setSubImages] = useState<(string | null)[]>([null, null, null]);
+
+  // Actual File objects for FormData submission
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [subFiles, setSubFiles] = useState<(File | null)[]>([null, null, null]);
 
 
   // Custom Sizing States
@@ -73,17 +78,26 @@ export default function AddProductPage() {
 
 
   const onSubmit = async (data: FormValues) => {
-    setIsLoading(true);
-    console.log("Submitting Add New Product Form data:", {
-      ...data,
-      heroImage,
-      subImages: subImages.filter(Boolean),
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("stock", data.stock);
+    formData.append("category", data.category);
+    formData.append("sizes", JSON.stringify(data.sizes.map(Number)));
+
+    if (heroFile) formData.append("images", heroFile);
+    subFiles.forEach((file) => {
+      if (file) formData.append("images", file);
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    toast.success("Product successfully created!");
-    router.push("/admin/products");
+    try {
+      await createProduct(formData).unwrap();
+      toast.success("Product successfully created!");
+      router.push("/admin/products");
+    } catch {
+      toast.error("Failed to create product. Please try again.");
+    }
   };
 
   // Size Grid Options
@@ -119,7 +133,7 @@ export default function AddProductPage() {
  
 
   return (
-    <div className="w-full max-w-7xl mx-auto font-sans">
+    <div className="w-full mx-auto font-sans">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-light-grey">
@@ -138,9 +152,21 @@ export default function AddProductPage() {
             <div className="lg:col-span-7 flex flex-col gap-8">
               <ImageUploader
                 heroImage={heroImage}
-                onHeroImageChange={setHeroImage}
+                onHeroImageChange={(src) => {
+                  setHeroImage(src);
+                  if (!src) setHeroFile(null);
+                }}
+                onHeroFileChange={setHeroFile}
                 subImages={subImages}
-                onSubImagesChange={setSubImages}
+                onSubImagesChange={(imgs) => {
+                  imgs.forEach((src, i) => {
+                    if (!src) setSubFiles((prev) => { const next = [...prev]; next[i] = null; return next; });
+                  });
+                  setSubImages(imgs);
+                }}
+                onSubFileChange={(index, file) => {
+                  setSubFiles((prev) => { const next = [...prev]; next[index] = file; return next; });
+                }}
               />
 
               <div className="bg-white dark:bg-card border border-light-grey rounded-2xl p-6 shadow-sm flex flex-col gap-6">

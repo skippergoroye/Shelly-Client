@@ -34,7 +34,7 @@ const Order = () => {
       <OrderMetricsCards />
 
       <Tabs defaultValue="all" className="flex-col">
-        <TabsList className="flex flex-wrap items-center gap-2 bg-transparent p-0 h-auto w-1/2 justify-start">
+        <TabsList className="flex flex-wrap items-center gap-2 bg-transparent p-0 h-auto w-137.5 justify-start">
           {ORDER_TABS.map((tab) => (
             <TabsTrigger
               key={tab.value}

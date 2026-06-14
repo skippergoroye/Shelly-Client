@@ -1,14 +1,44 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { useState } from "react";
+import { FileDown } from "lucide-react";
+import { useSelector } from "react-redux";
 import SubmitButton from "@/components/shared/SubmitButton";
 import { PageHeader } from "@/components/common/PageHeader";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ORDER_TABS } from "./constants";
 import { OrderMetricsCards } from "./_components/OrderMetricsCards";
 import OrdersTable from "./_components/OrdersTable";
+import { RootState } from "@/redux/app/store";
+import ToastNotification from "@/components/shared/ToastNotification";
 
 const Order = () => {
+  const [isExporting, setIsExporting] = useState(false);
+  const token = useSelector((state: RootState) => state.auth?.token);
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/orders/export`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error("Export failed");
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "shelly-orders.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      ToastNotification({ title: "Export Failed", description: "Could not download orders CSV.", type: "error" });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -20,9 +50,12 @@ const Order = () => {
         <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
           <SubmitButton
             type="button"
-            className="flex items-center justify-center px-4 py-2 bg-primary text-xs font-bold text-white rounded-lg shadow-md shadow-blue-500/10 transition-all cursor-pointer h-auto border-0"
+            clickFn={handleExport}
+            isLoading={isExporting}
+            loadingText="Exporting…"
+            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-primary text-xs font-bold text-white rounded-lg shadow-md shadow-blue-500/10 transition-all cursor-pointer h-auto border-0"
           >
-            <Plus />
+            <FileDown className="w-4 h-4" />
             Export Orders
           </SubmitButton>
         </div>

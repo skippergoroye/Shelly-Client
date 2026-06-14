@@ -39,6 +39,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
     dispatch(
       addToCart({
         id: `${productId}-${activeSize}`,
+        productId,
         name: `${product.name} (EU ${activeSize})`,
         price: product.price,
         quantity: 1,

@@ -31,6 +31,7 @@ export default function CategorySection() {
     dispatch(
       addToCart({
         id: `home-${product._id}-${size}`,
+        productId: product._id,
         name: `${product.name} (EU ${size})`,
         price: product.price,
         quantity: 1,

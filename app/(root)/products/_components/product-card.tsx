@@ -28,6 +28,7 @@ export function ProductCard({ id, name, category, price, images, sizes }: Produc
       dispatch(
         addToCart({
           id: `${id}-${selectedSize}`,
+          productId: id,
           name: `${name} (EU ${selectedSize})`,
           price,
           quantity: 1,

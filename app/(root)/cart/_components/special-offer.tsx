@@ -20,7 +20,7 @@ export default function SpecialOffer() {
       </div>
 
       {/* Image */}
-      <div className="flex-shrink-0 hidden sm:block">
+      <div className="shrink-0 hidden sm:block">
         <Image
           src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&h=300&fit=crop"
           alt="Premium Care Kit"

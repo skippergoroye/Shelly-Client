@@ -8,8 +8,6 @@ import { ORDER_TABS } from "./constants";
 import { OrderMetricsCards } from "./_components/OrderMetricsCards";
 import OrdersTable from "./_components/OrdersTable";
 
-
-
 const Order = () => {
   return (
     <div className="flex flex-col gap-8">
@@ -29,7 +27,6 @@ const Order = () => {
           </SubmitButton>
         </div>
       </div>
-
 
       <OrderMetricsCards />
 
@@ -54,12 +51,6 @@ const Order = () => {
           </TabsContent>
         ))}
       </Tabs>
-
-
-   
-
-
-
     </div>
   );
 };

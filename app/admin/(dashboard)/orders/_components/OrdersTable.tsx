@@ -153,7 +153,7 @@ const OrdersTable = ({ statusFilter }: OrdersTableProps) => {
       columns={columns}
       data={data}
       searchPlaceholder="Search orders..."
-      pageSize={10}
+      pageSize={2}
       totalCount={data.length}
       emptyMessage="No matching orders found."
       hasDateFilter

@@ -13,13 +13,17 @@ export interface ApiProduct {
   updatedAt: string;
 }
 
-export const adminProductApi = apiSlice.injectEndpoints({
+export const adminProductApi = apiSlice
+  .enhanceEndpoints({ addTagTypes: ["Product"] })
+  .injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query<ApiProduct[], void>({
       query: () => "/admin/products",
+      providesTags: ["Product"],
     }),
     getProductById: builder.query<ApiProduct, string>({
       query: (id) => `/admin/products/${id}`,
+      providesTags: ["Product"],
     }),
     createProduct: builder.mutation<ApiProduct, FormData>({
       query: (formData) => ({
@@ -27,6 +31,7 @@ export const adminProductApi = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
+      invalidatesTags: ["Product"],
     }),
     updateProduct: builder.mutation<ApiProduct, { id: string; formData: FormData }>({
       query: ({ id, formData }) => ({
@@ -34,12 +39,14 @@ export const adminProductApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: formData,
       }),
+      invalidatesTags: ["Product"],
     }),
     deleteProduct: builder.mutation<{ message: string }, string>({
       query: (id) => ({
         url: `/admin/products/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Product"],
     }),
   }),
 });

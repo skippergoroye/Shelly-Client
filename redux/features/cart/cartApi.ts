@@ -13,13 +13,17 @@ export interface PublicApiProduct {
   updatedAt: string;
 }
 
-export const cartApi = apiSlice.injectEndpoints({
+export const cartApi = apiSlice
+  .enhanceEndpoints({ addTagTypes: ["Product"] })
+  .injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query<PublicApiProduct[], void>({
       query: () => "/products",
+      providesTags: ["Product"],
     }),
     getProductById: builder.query<PublicApiProduct, string>({
       query: (id) => `/products/${id}`,
+      providesTags: ["Product"],
     }),
   }),
 });

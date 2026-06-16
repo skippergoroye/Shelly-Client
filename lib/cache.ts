@@ -1,12 +1,4 @@
-export interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  images: string;
-  category: string;
-  rating: number;
-}
+import type { CartItem } from "@/redux/features/cart/cartSlice";
 
 interface CartState {
   items: CartItem[];

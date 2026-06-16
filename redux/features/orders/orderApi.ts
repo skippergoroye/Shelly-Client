@@ -41,7 +41,9 @@ export interface VerifyOrderResponse {
   createdAt: string;
 }
 
-export const orderApi = apiSlice.injectEndpoints({
+export const orderApi = apiSlice
+  .enhanceEndpoints({ addTagTypes: ["Orders"] })
+  .injectEndpoints({
   endpoints: (builder) => ({
     checkout: builder.mutation<CheckoutResponse, CheckoutRequest>({
       query: (body) => ({
@@ -49,6 +51,7 @@ export const orderApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Orders"],
     }),
     verifyPayment: builder.query<VerifyOrderResponse, string>({
       query: (reference) => `/orders/verify/${reference}`,

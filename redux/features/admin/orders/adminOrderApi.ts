@@ -60,38 +60,40 @@ export interface GetOrdersParams {
   limit?: number;
 }
 
-export const adminOrderApi = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
-    getOrderStats: builder.query<OrderStats, void>({
-      query: () => "/admin/orders/stats",
-      providesTags: ["OrderStats"],
-    }),
-    getAdminOrders: builder.query<OrdersListResponse, GetOrdersParams>({
-      query: ({ status, search, page = 1, limit = 50 }) => ({
-        url: "/admin/orders",
-        params: {
-          ...(status && status !== "all" ? { status } : {}),
-          ...(search ? { search } : {}),
-          page,
-          limit,
-        },
+export const adminOrderApi = apiSlice
+  .enhanceEndpoints({ addTagTypes: ["Orders", "OrderStats", "Order"] })
+  .injectEndpoints({
+    endpoints: (builder) => ({
+      getOrderStats: builder.query<OrderStats, void>({
+        query: () => "/admin/orders/stats",
+        providesTags: ["OrderStats"],
       }),
-      providesTags: ["Orders"],
-    }),
-    getAdminOrderById: builder.query<AdminOrder, string>({
-      query: (id) => `/admin/orders/${id}`,
-      providesTags: (_result, _err, id) => [{ type: "Order", id }],
-    }),
-    updateOrderStatus: builder.mutation<AdminOrder, { id: string; fulfillmentStatus: FulfillmentStatus }>({
-      query: ({ id, fulfillmentStatus }) => ({
-        url: `/admin/orders/${id}/status`,
-        method: "PATCH",
-        body: { fulfillmentStatus },
+      getAdminOrders: builder.query<OrdersListResponse, GetOrdersParams>({
+        query: ({ status, search, page = 1, limit = 50 }) => ({
+          url: "/admin/orders",
+          params: {
+            ...(status && status !== "all" ? { status } : {}),
+            ...(search ? { search } : {}),
+            page,
+            limit,
+          },
+        }),
+        providesTags: ["Orders"],
       }),
-      invalidatesTags: (_result, _err, { id }) => ["Orders", "OrderStats", { type: "Order", id }],
+      getAdminOrderById: builder.query<AdminOrder, string>({
+        query: (id) => `/admin/orders/${id}`,
+        providesTags: (_result, _err, id) => [{ type: "Order", id }],
+      }),
+      updateOrderStatus: builder.mutation<AdminOrder, { id: string; fulfillmentStatus: FulfillmentStatus }>({
+        query: ({ id, fulfillmentStatus }) => ({
+          url: `/admin/orders/${id}/status`,
+          method: "PATCH",
+          body: { fulfillmentStatus },
+        }),
+        invalidatesTags: (_result, _err, { id }) => ["Orders", "OrderStats", { type: "Order", id }],
+      }),
     }),
-  }),
-});
+  });
 
 export const {
   useGetOrderStatsQuery,
@@ -99,3 +101,9 @@ export const {
   useGetAdminOrderByIdQuery,
   useUpdateOrderStatusMutation,
 } = adminOrderApi;
+
+// providesTags tells RTK Query which cache tags this query "owns". When another query or mutation calls invalidatesTags: ["OrderStats"], RTK automatically refetches this query in the background.
+
+// In this project it's wired so that when you call updateOrderStatus (the PATCH mutation), it invalidates "OrderStats" — which causes the metrics cards (pending value, active shipments, satisfaction) to automatically re-fetch and show fresh numbers without you having to manually trigger a refetch.
+
+// Without it, the stats cards would stay stale after a status change until the user manually refreshed the page.

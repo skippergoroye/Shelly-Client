@@ -1,10 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useForm, FormProvider as Form } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useRouter } from "next/navigation";
+import { FormProvider as Form } from "react-hook-form";
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldAlert } from "lucide-react";
@@ -26,6 +22,7 @@ export default function AdminLoginPage() {
           alt="Heirloom Bespoke Premium Footwear close-up"
           src="/img/admin-login-img.png"
           fill
+          sizes="(max-width: 768px) 0vw, (max-width: 1024px) 50vw, 42vw"
           className="object-cover object-center"
           priority
         />

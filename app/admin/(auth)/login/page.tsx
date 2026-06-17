@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
                     name="password"
                     label="Password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder="Enter Password"
                     leftIcon={<Lock className="w-4 h-4 text-gray-400" />}
                     rightIcon={
                       <button

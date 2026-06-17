@@ -26,6 +26,7 @@ export const cartApi = apiSlice
       providesTags: ["Product"],
     }),
   }),
+   overrideExisting: false
 });
 
 export const {

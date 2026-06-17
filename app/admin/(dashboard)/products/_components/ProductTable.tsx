@@ -62,7 +62,6 @@ const ProductTable = () => {
     try {
       await deleteProduct(pendingDeleteId).unwrap();
       toast.success("Product deleted successfully.");
-      refetch();
     } catch {
       toast.error("Failed to delete product. Please try again.");
     } finally {

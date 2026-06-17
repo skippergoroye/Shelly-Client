@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useGetProductsQuery } from "@/redux/features/admin/products/adminProductApi";
+import { ApiProduct, useGetAdminProductsQuery } from "@/redux/features/admin/products/adminProductApi";
 
 export interface Product {
   id: string;
@@ -28,10 +28,10 @@ export const useProducts = () => {
 
   const debouncedSearch = useDebounce(searchQuery, 500);
 
-  const { data: rawProducts = [], isFetching, isError, refetch } = useGetProductsQuery();
+  const { data: rawProducts = [], isFetching, isError, refetch } = useGetAdminProductsQuery();
 
   const allProducts = useMemo<Product[]>(() => {
-    const mapped = rawProducts.map((p) => ({
+    const mapped = rawProducts.map((p: ApiProduct) => ({
       id: p._id,
       sku: `SHLY-${p._id.slice(-4).toUpperCase()}`,
       name: p.name,
@@ -48,7 +48,7 @@ export const useProducts = () => {
 
     const term = debouncedSearch.toLowerCase();
     return mapped.filter(
-      (p) =>
+      (p: Product) =>
         p.name.toLowerCase().includes(term) ||
         p.category.toLowerCase().includes(term)
     );

@@ -56,7 +56,9 @@ export const orderApi = apiSlice
     verifyPayment: builder.query<VerifyOrderResponse, string>({
       query: (reference) => `/orders/verify/${reference}`,
     }),
+   
   }),
+   overrideExisting: false
 });
 
 export const { useCheckoutMutation, useVerifyPaymentQuery } = orderApi;

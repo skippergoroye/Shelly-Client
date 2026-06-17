@@ -17,11 +17,11 @@ export const adminProductApi = apiSlice
   .enhanceEndpoints({ addTagTypes: ["Product"] })
   .injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<ApiProduct[], void>({
+    getAdminProducts: builder.query<ApiProduct[], void>({
       query: () => "/admin/products",
       providesTags: ["Product"],
     }),
-    getProductById: builder.query<ApiProduct, string>({
+    getAdminProductById: builder.query<ApiProduct, string>({
       query: (id) => `/admin/products/${id}`,
       providesTags: ["Product"],
     }),
@@ -52,8 +52,8 @@ export const adminProductApi = apiSlice
 });
 
 export const {
-  useGetProductsQuery,
-  useGetProductByIdQuery,
+  useGetAdminProductsQuery,
+  useGetAdminProductByIdQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,

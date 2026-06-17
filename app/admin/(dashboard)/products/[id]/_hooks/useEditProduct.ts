@@ -7,7 +7,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  useGetProductByIdQuery,
+  useGetAdminProductByIdQuery,
   useUpdateProductMutation,
 } from "@/redux/features/admin/products/adminProductApi";
 import { editProductPageSchema } from "../schemas/editProductPageSchema";
@@ -20,7 +20,7 @@ const LOW_STOCK_THRESHOLD = 5;
 export const useEditProduct = (productId: string) => {
   const router = useRouter();
 
-  const { data: product, isLoading: isFetching, isError } = useGetProductByIdQuery(productId);
+  const { data: product, isLoading: isFetching, isError } = useGetAdminProductByIdQuery(productId);
   const [updateProduct, { isLoading: isSubmitting }] = useUpdateProductMutation();
 
   const [heroImage, setHeroImage] = useState<string | null>(null);

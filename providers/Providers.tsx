@@ -1,18 +1,17 @@
 import React from "react";
-import { Toaster } from "sonner";
 import ReduxProvider from "@/redux/ReduxProvider";
 import { RefetchProvider } from "@/context/RefetchContext";
-import { ThemeProvider } from "@/context/ThemeProvider";
 import ToastProvider from "./ToastProvider";
+import ThemeProviders from "./ThemeProvider";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReduxProvider>
       <RefetchProvider>
-        <ThemeProvider>
+        <ThemeProviders>
           {children}
           <ToastProvider />
-        </ThemeProvider>
+        </ThemeProviders>
       </RefetchProvider>
     </ReduxProvider>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { Sun, Moon, ChevronLeft, LogOut, User } from "lucide-react";
-import { useTheme } from "@/context/ThemeProvider";
+import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
 import { getPageTitle } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import ToastNotification from "@/components/shared/ToastNotification";
 
 export default function Navbar() {
-  const { theme, toggleTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const toggleTheme = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
   const pathname = usePathname();
   const title = getPageTitle(pathname);
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ export default function Navbar() {
           onClick={toggleTheme}
           className="text-(--on-surface-variant) hover:text-(--on-surface) p-1.5 rounded-lg hover:bg-(--surface-container) transition-colors cursor-pointer"
         >
-          {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+          {resolvedTheme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
 
         <div className="w-px h-6 bg-(--outline-variant) mx-1" />

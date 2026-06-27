@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addToCart } from "@/redux/features/cart/cartSlice";
-import SubmitButton from "@/components/shared/SubmitButton";
-import ToastNotification from "@/components/shared/ToastNotification";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/redux/features/cart/cartSlice';
+import SubmitButton from '@/components/shared/SubmitButton';
+import ToastNotification from '@/components/shared/ToastNotification';
 
 interface ProductCardProps {
   id: string;
@@ -14,13 +14,13 @@ interface ProductCardProps {
   category: string;
   price: number;
   images: string;
-  sizes: string[];
+  sizes?: string[];
 }
 
-export function ProductCard({ id, name, category, price, images, sizes }: ProductCardProps) {
+export function ProductCard({ id, name, category, price, images, sizes = [] }: ProductCardProps) {
   const dispatch = useDispatch();
   const [isAdding, setIsAdding] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] ?? "40");
+  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] ?? '40');
 
   const handleAddToCart = () => {
     try {
@@ -35,15 +35,19 @@ export function ProductCard({ id, name, category, price, images, sizes }: Produc
           images,
           category,
           rating: 0,
-        })
+        }),
       );
       ToastNotification({
         title: `${name} (EU ${selectedSize}) added!`,
-        description: "Item has been added to your cart.",
-        type: "success",
+        description: 'Item has been added to your cart.',
+        type: 'success',
       });
     } catch {
-      ToastNotification({ title: "Error", description: "Failed to add item to cart.", type: "error" });
+      ToastNotification({
+        title: 'Error',
+        description: 'Failed to add item to cart.',
+        type: 'error',
+      });
     } finally {
       setTimeout(() => setIsAdding(false), 1000);
     }
@@ -93,8 +97,8 @@ export function ProductCard({ id, name, category, price, images, sizes }: Produc
                 onClick={() => setSelectedSize(size)}
                 className={`w-8 h-8 text-[11px] font-bold transition-all border flex items-center justify-center cursor-pointer ${
                   selectedSize === size
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "border-gray-200 text-gray-700 bg-white hover:border-gray-400"
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'border-gray-200 text-gray-700 bg-white hover:border-gray-400'
                 }`}
               >
                 {size}
@@ -109,7 +113,7 @@ export function ProductCard({ id, name, category, price, images, sizes }: Produc
           isLoading={isAdding}
           className="w-full px-4 py-5.5 bg-primary text-sm font-semibold text-white transition-colors duration-200"
         >
-          {isAdding ? "Added to Cart" : "Add to Cart"}
+          {isAdding ? 'Added to Cart' : 'Add to Cart'}
         </SubmitButton>
       </div>
     </div>

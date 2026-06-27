@@ -1,197 +1,126 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { MoreVertical } from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
-import DataTable, { FilterField, FilterValues } from "@/components/shared/DataTable";
-import { DateRange } from "@/components/common/DateFilter";
-import SubmitButton from "@/components/shared/SubmitButton";
-import { STATUS_STYLES } from "@/lib/utils";
+import Link from 'next/link';
+import { Eye } from 'lucide-react';
+import { ColumnDef } from '@tanstack/react-table';
+import DataTable from '@/components/shared/DataTable';
+import { STATUS_STYLES } from '@/lib/utils';
+import { useGetDashboardOrdersQuery } from '@/redux/features/admin/dashboard/adminDashboardApi';
+import { AdminOrder } from '@/redux/features/admin/orders/adminOrderApi';
 
-// ── Types ──────────────────────────────────────────────
-export interface Order {
-  id: string;
-  customerInit?: string;
+// ── Display row ────────────────────────────────────────
+interface OrderRow {
+  _id: string;
+  ref: string;
   customerName: string;
-  customerAvatar?: string;
-  address: string;
-  status: "Shipped" | "Processing" | "Pending";
+  customerInit: string;
+  fulfillmentStatus: string;
   date: string;
 }
 
-// ── Sample data ────────────────────────────────────────
-const INITIAL_ORDERS: Order[] = [
-  {
-    id: "#HR-8821",
-    customerInit: "JW",
-    customerName: "Julian Wyvern",
-    address: "22 Baker St, London",
-    status: "Shipped",
-    date: "Oct 24, 2024",
-  },
-  {
-    id: "#HR-8822",
-    customerInit: "EM",
-    customerName: "Elena Moretti",
-    address: "Via del Corso, Rome",
-    status: "Processing",
-    date: "Oct 25, 2024",
-  },
-  {
-    id: "#HR-8823",
-    customerName: "Marcus Chen",
-    customerAvatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120&h=120",
-    address: "15 Orchard Rd, SG",
-    status: "Pending",
-    date: "Oct 25, 2024",
-  },
-  {
-    id: "#HR-8824",
-    customerInit: "SR",
-    customerName: "Sofia Rossi",
-    address: "5th Ave, New York",
-    status: "Shipped",
-    date: "Oct 26, 2024",
-  },
-];
+function toRow(o: AdminOrder): OrderRow {
+  const firstName = o.firstName ?? '';
+  const lastName = o.lastName ?? '';
+  const initials = `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase() || '?';
+  return {
+    _id: o._id,
+    ref: o.orderNumber ? `#${o.orderNumber}` : o.reference,
+    customerName: `${firstName} ${lastName}`.trim() || 'Unknown',
+    customerInit: initials,
+    fulfillmentStatus: o.fulfillmentStatus ?? 'pending',
+    date: new Date(o.createdAt).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }),
+  };
+}
 
-
-
-// ── Filter fields ─────────────────────────────────────
-const FILTER_FIELDS: FilterField[] = [
-  {
-    key: "status",
-    label: "Status",
-    type: "select",
-    options: [
-      { label: "Shipped", value: "Shipped" },
-      { label: "Processing", value: "Processing" },
-      { label: "Pending", value: "Pending" },
-    ],
-  },
-  { key: "customerName", label: "Customer", type: "text", placeholder: "e.g. Julian" },
-  { key: "address", label: "Address", type: "text", placeholder: "e.g. Baker St" },
-];
+// ── Status map ─────────────────────────────────────────
+const STATUS_MAP: Record<string, string> = {
+  pending: 'Pending',
+  processing: 'Processing',
+  shipped: 'Shipped',
+  delivered: 'Delivered',
+};
 
 // ── Column definitions ────────────────────────────────
-const columns: ColumnDef<Order, any>[] = [
+const columns: ColumnDef<OrderRow, unknown>[] = [
   {
-    accessorKey: "id",
-    header: "Order ID",
+    accessorKey: 'ref',
+    header: 'Order ID',
     cell: ({ row }) => (
       <Link
-        href={`/admin/orders/${row.original.id.replace("#", "")}`}
+        href={`/admin/orders/${row.original._id}`}
         className="font-bold text-[#0066FF] text-xs hover:underline"
       >
-        {row.original.id}
+        {row.original.ref}
       </Link>
     ),
   },
   {
-    accessorKey: "customerName",
-    header: "Customer",
-    cell: ({ row }) => {
-      const order = row.original;
-      return (
-        <div className="flex items-center gap-3">
-          {order.customerAvatar ? (
-            <div className="w-7 h-7 rounded-full overflow-hidden border border-gray-100 shrink-0">
-              <img
-                src={order.customerAvatar}
-                alt={order.customerName}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ) : (
-            <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500 border border-gray-200/50 shrink-0">
-              {order.customerInit}
-            </div>
-          )}
-          <span className="font-bold text-xs text-gray-800">
-            {order.customerName}
-          </span>
+    accessorKey: 'customerName',
+    header: 'Customer',
+    cell: ({ row }) => (
+      <div className="flex items-center gap-3">
+        <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500 border border-gray-200/50 shrink-0">
+          {row.original.customerInit}
         </div>
-      );
-    },
-  },
-  {
-    accessorKey: "address",
-    header: "Address",
-    cell: ({ getValue }) => (
-      <span className="text-xs text-gray-400 font-medium">
-        {getValue<string>()}
-      </span>
+        <span className="font-bold text-xs text-gray-800">{row.original.customerName}</span>
+      </div>
     ),
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: 'fulfillmentStatus',
+    header: 'Status',
     cell: ({ getValue }) => {
-      const status = getValue<Order["status"]>();
+      const raw = getValue<string>();
+      const label = STATUS_MAP[raw] ?? raw;
       return (
         <span
-          className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-extrabold tracking-wide ${STATUS_STYLES[status]}`}
+          className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-extrabold tracking-wide ${STATUS_STYLES[label as keyof typeof STATUS_STYLES] ?? 'bg-gray-100 text-gray-500'}`}
         >
-          {status}
+          {label}
         </span>
       );
     },
   },
   {
-    accessorKey: "date",
-    header: "Date",
+    accessorKey: 'date',
+    header: 'Date',
     cell: ({ getValue }) => (
-      <span className="text-xs text-gray-400 font-medium">
-        {getValue<string>()}
-      </span>
+      <span className="text-xs text-gray-400 font-medium">{getValue<string>()}</span>
     ),
   },
   {
-    id: "actions",
-    header: "Action",
-    cell: () => (
-      <div className="">
-        <SubmitButton
-          type="button"
-          className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-50 rounded cursor-pointer bg-transparent border-0 shadow-none h-auto"
-        >
-          <MoreVertical className="w-4 h-4" />
-        </SubmitButton>
-      </div>
+    id: 'actions',
+    header: 'Action',
+    cell: ({ row }) => (
+      <Link href={`/admin/orders/${row.original._id}`}>
+        <span className="flex items-center justify-center text-gray-400 hover:text-blue-500 transition-colors p-1.5 hover:bg-blue-50 rounded cursor-pointer">
+          <Eye className="w-4 h-4" />
+        </span>
+      </Link>
     ),
   },
 ];
 
 // ── Component ──────────────────────────────────────────
 export function RecentTransactions() {
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => setIsRefreshing(false), 1000);
-  };
-
-  const handleFilters = (values: FilterValues, dateRange: DateRange) => {
-    console.log("Applied filters:", values, dateRange);
-  };
+  const { data, isFetching, refetch } = useGetDashboardOrdersQuery({ limit: 10 });
+  const rows = (data?.orders ?? []).map(toRow);
 
   return (
-    <DataTable<Order>
+    <DataTable<OrderRow>
       title="Recent Orders"
       columns={columns}
-      data={INITIAL_ORDERS}
+      data={rows}
       searchPlaceholder="Search orders..."
-      pageSize={2}
-      totalCount={1284}
-      emptyMessage="No matching orders found."
-      hasDateFilter
-      dateFilterLabel="Order Date"
-      filterFields={FILTER_FIELDS}
-      onApplyFilters={handleFilters}
-      onRefresh={handleRefresh}
-      isRefreshing={isRefreshing}
+      pageSize={10}
+      totalCount={data?.total ?? 0}
+      emptyMessage={isFetching ? 'Loading orders…' : 'No orders found.'}
+      onRefresh={refetch}
+      isRefreshing={isFetching}
     />
   );
 }

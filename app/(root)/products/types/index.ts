@@ -4,7 +4,11 @@ export interface Product {
   category: string;
   price: number;
   images: string;
-  sizes: string[];
+  sizes?: string[];
+  rating?: number;
+  badge?: string;
+  badgeColor?: string;
+  originalPrice?: number;
 }
 
 export interface ProductGridProps {

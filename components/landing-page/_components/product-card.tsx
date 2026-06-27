@@ -1,12 +1,11 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart, Star } from "lucide-react";
-import { useAppDispatch } from "@/redux/app/hooks";
-import { addToCart } from "@/redux/features/cart/cartSlice";
-import { toast } from "sonner";
-import ToastNotification from "@/components/shared/ToastNotification";
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Heart, ShoppingCart, Star } from 'lucide-react';
+import { useAppDispatch } from '@/redux/app/hooks';
+import { addToCart } from '@/redux/features/cart/cartSlice';
+import ToastNotification from '@/components/shared/ToastNotification';
 
 interface ProductCardProps {
   id: string;
@@ -30,10 +29,8 @@ export function ProductCard({
   price,
   rating,
   image,
-  alt,
   badge,
   badgeColor,
-  originalPrice,
 }: ProductCardProps) {
   const dispatch = useAppDispatch();
 
@@ -41,6 +38,7 @@ export function ProductCard({
     dispatch(
       addToCart({
         id,
+        productId: id,
         name,
         price,
         quantity: 1,
@@ -51,8 +49,8 @@ export function ProductCard({
     );
     ToastNotification({
       title: `${name} added to cart!`,
-      description: "Item has been added to your cart.",
-      type: "success",
+      description: 'Item has been added to your cart.',
+      type: 'success',
     });
   };
 
@@ -96,14 +94,9 @@ export function ProductCard({
 
       <div className="p-6 space-y-2 flex-1">
         <div className="flex justify-between items-start">
-          <span className="text-body-sm text-[color:var(--on-surface-variant)]">
-            {category}
-          </span>
+          <span className="text-body-sm text-[color:var(--on-surface-variant)]">{category}</span>
           <div className="flex items-center gap-1">
-            <Star
-              size={16}
-              className="text-[color:var(--tertiary)] fill-[color:var(--tertiary)]"
-            />
+            <Star size={16} className="text-[color:var(--tertiary)] fill-[color:var(--tertiary)]" />
             <span className="text-label-sm">{rating}</span>
           </div>
         </div>
@@ -112,9 +105,7 @@ export function ProductCard({
           {title}
         </h3>
 
-        <p className="text-h3 text-[color:var(--primary-container)]">
-          ₦{price.toLocaleString()}
-        </p>
+        <p className="text-h3 text-[color:var(--primary-container)]">₦{price.toLocaleString()}</p>
       </div>
     </div>
   );

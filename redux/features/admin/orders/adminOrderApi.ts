@@ -92,6 +92,26 @@ export const adminOrderApi = apiSlice
         }),
         invalidatesTags: (_result, _err, { id }) => ["Orders", "OrderStats", { type: "Order", id }],
       }),
+      exportOrders: builder.mutation<void, void>({
+        queryFn: async (_arg, _api, _extraOptions, baseQuery) => {
+          const result = await baseQuery({
+            url: "/admin/orders/export",
+            responseHandler: (response) => response.blob(),
+            cache: "no-cache",
+          });
+          if (result.error) return { error: result.error };
+          const blob = result.data as Blob;
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "shelly-orders.csv";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          return { data: undefined };
+        },
+      }),
     }),
   });
 
@@ -100,6 +120,7 @@ export const {
   useGetAdminOrdersQuery,
   useGetAdminOrderByIdQuery,
   useUpdateOrderStatusMutation,
+  useExportOrdersMutation,
 } = adminOrderApi;
 
 // providesTags tells RTK Query which cache tags this query "owns". When another query or mutation calls invalidatesTags: ["OrderStats"], RTK automatically refetches this query in the background.
